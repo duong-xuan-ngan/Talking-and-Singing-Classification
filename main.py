@@ -15,7 +15,7 @@ sns.set_theme(style="white", palette=None)
 color_pal = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 color_cycle = cycle(plt.rcParams["axes.prop_cycle"].by_key()["color"])
 
-audio_files = glob('data\singing\data1.wav')
+audio_files = glob('Talking-and-Signing-Classification\data\singing\data1.wav')
 ipd.Audio(audio_files[0])
 
 y, sr = librosa.load(audio_files[0])
