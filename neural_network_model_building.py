@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
 import tensorflow as tf
+from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping
@@ -445,9 +446,15 @@ def main():
     # X_test = scaler.transform(X_test)
     # save_model_and_scaler function expects scaler, so you need to pass it
     # However, assuming data is already scaled, we'll load the scaler
-    scaler = joblib.load('minmax_scaler.save')  # Ensure this file exists
-    X_train = scaler.transform(X_train)
-    X_test = scaler.transform(X_test)
+    try:
+        scaler = joblib.load('minmax_scaler.save')
+        X_train = scaler.transform(X_train)
+        X_test = scaler.transform(X_test)
+    except (FileNotFoundError, EOFError):
+        scaler = MinMaxScaler()
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
+        joblib.dump(scaler, 'minmax_scaler.save')
     
     # -----------------------------
     # Compute Class Weights (Optional if not using SMOTE)
