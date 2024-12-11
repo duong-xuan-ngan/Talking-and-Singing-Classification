@@ -397,7 +397,7 @@ def save_model_and_scaler(model, scaler, scaler_path='minmax_scaler.save', model
     
     Parameters:
         model (Sequential): Trained Keras model.
-        scaler (MinMaxScaler): Fitted scaler object.
+        scaler (MinMaxScaler or None): Fitted scaler object or None.
         scaler_path (str): Path to save the scaler.
         model_path (str): Path to save the model.
     """
@@ -405,9 +405,13 @@ def save_model_and_scaler(model, scaler, scaler_path='minmax_scaler.save', model
     model.save(model_path)
     print(f"Neural Network model saved as '{model_path}'")
     
-    # Save the scaler
-    joblib.dump(scaler, scaler_path)
-    print(f"Scaler saved as '{scaler_path}'")
+    if scaler is not None:
+        # Save the scaler only if it's provided
+        joblib.dump(scaler, scaler_path)
+        print(f"Scaler saved as '{scaler_path}'")
+    else:
+        print("Scaler not saved since it was not used.")
+
 
 # -----------------------------
 # Stage 10: Main Function
@@ -438,37 +442,18 @@ def main():
     X_train, y_train = handle_class_imbalance(X_train, y_train, method='smote')
     
     # -----------------------------
-    # Feature Scaling (Optional if already scaled)
+    # Feature Scaling (Already Scaled)
     # -----------------------------
-    # If you haven't scaled your data yet or rescaled after SMOTE, uncomment the following:
-    # scaler = MinMaxScaler()
-    # X_train = scaler.fit_transform(X_train)
-    # X_test = scaler.transform(X_test)
-    # save_model_and_scaler function expects scaler, so you need to pass it
-    # However, assuming data is already scaled, we'll load the scaler
-    try:
-        scaler = joblib.load('minmax_scaler.save')
-        X_train = scaler.transform(X_train)
-        X_test = scaler.transform(X_test)
-    except (FileNotFoundError, EOFError):
-        scaler = MinMaxScaler()
-        X_train = scaler.fit_transform(X_train)
-        X_test = scaler.transform(X_test)
-        joblib.dump(scaler, 'minmax_scaler.save')
+    # Since data is already scaled in 'train_features_scaled.csv' and 'test_features_scaled.csv',
+    # we skip applying MinMaxScaler again.
+    scaler = None  # No scaler needed since data is already scaled
+    print("Data is already scaled. Skipping MinMaxScaler.")
     
     # -----------------------------
     # Compute Class Weights (Optional if not using SMOTE)
     # -----------------------------
-    # If you used SMOTE, you might not need class weights. Otherwise, uncomment the following:
-    # class_weights = class_weight.compute_class_weight(
-    #     class_weight='balanced',
-    #     classes=np.unique(y_train),
-    #     y=y_train
-    # )
-    # class_weights = dict(enumerate(class_weights))
-    # print("Class Weights:", class_weights)
-    # Otherwise:
-    class_weights = None  # Set to None if using SMOTE
+    # If you used SMOTE, class weights are generally not needed because SMOTE balances the classes.
+    class_weights = None  # Set to None since SMOTE is applied
     
     # -----------------------------
     # Build the Neural Network Model
@@ -510,11 +495,13 @@ def main():
     final_evaluation(best_model, history_best, X_test, y_test)
     
     # -----------------------------
-    # Save the Final Model and Scaler
+    # Save the Final Model
     # -----------------------------
-    save_model_and_scaler(best_model, scaler, scaler_path='minmax_scaler.save', model_path='best_neural_network_model.h5')
+    # Since the data is already scaled, there's no need to save the scaler.
+    save_model_and_scaler(best_model, scaler=None, model_path='best_neural_network_model.keras')
     
     print("\nNeural Network model building process completed successfully!")
+
 
 # -----------------------------
 # Execute the Main Function
