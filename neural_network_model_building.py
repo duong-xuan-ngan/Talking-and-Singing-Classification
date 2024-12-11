@@ -21,6 +21,7 @@ from tqdm import tqdm  # For progress bars
 import logging
 logging.getLogger('tensorflow').setLevel(logging.ERROR)
 
+
 # -----------------------------
 # Stage 1: Loading the Data
 # -----------------------------
@@ -292,8 +293,10 @@ def hyperparameter_tuning(X_train, y_train, input_dim, max_trials=10, executions
         max_trials=max_trials,
         executions_per_trial=executions_per_trial,
         directory='keras_tuner_dir',
-        project_name='audio_classification_nn'
-    )
+        project_name='audio_classification_nn',
+        overwrite=True  # This line will overwrite any existing data
+)
+
     
     # Display the search space
     tuner.search_space_summary()
