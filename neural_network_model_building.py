@@ -12,10 +12,9 @@ from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score
 from sklearn.utils import class_weight
-from sklearn.preprocessing import MinMaxScaler
-import keras_tuner as kt
 from imblearn.over_sampling import SMOTE  # For handling class imbalance
 from tqdm import tqdm  # For progress bars
+import keras_tuner as kt
 
 # Suppress TensorFlow warnings for cleaner output
 import logging
@@ -389,29 +388,19 @@ def final_evaluation(best_model, history_best, X_test, y_test):
     plt.show()
 
 # -----------------------------
-# Stage 9: Saving the Final Model and Scaler
+# Stage 9: Saving the Final Model
 # -----------------------------
-def save_model_and_scaler(model, scaler, scaler_path='minmax_scaler.save', model_path='best_neural_network_model.h5'):
+def save_model_and_scaler(model, model_path='best_neural_network_model.h5'):
     """
-    Save the trained model and scaler for future use.
+    Save the trained model for future use.
     
     Parameters:
         model (Sequential): Trained Keras model.
-        scaler (MinMaxScaler or None): Fitted scaler object or None.
-        scaler_path (str): Path to save the scaler.
         model_path (str): Path to save the model.
     """
     # Save the Neural Network model
     model.save(model_path)
     print(f"Neural Network model saved as '{model_path}'")
-    
-    if scaler is not None:
-        # Save the scaler only if it's provided
-        joblib.dump(scaler, scaler_path)
-        print(f"Scaler saved as '{scaler_path}'")
-    else:
-        print("Scaler not saved since it was not used.")
-
 
 # -----------------------------
 # Stage 10: Main Function
@@ -438,16 +427,7 @@ def main():
     # -----------------------------
     # Handle Class Imbalance (Optional)
     # -----------------------------
-    # Choose method: 'none' or 'smote'
     X_train, y_train = handle_class_imbalance(X_train, y_train, method='smote')
-    
-    # -----------------------------
-    # Feature Scaling (Already Scaled)
-    # -----------------------------
-    # Since data is already scaled in 'train_features_scaled.csv' and 'test_features_scaled.csv',
-    # we skip applying MinMaxScaler again.
-    scaler = None  # No scaler needed since data is already scaled
-    print("Data is already scaled. Skipping MinMaxScaler.")
     
     # -----------------------------
     # Compute Class Weights (Optional if not using SMOTE)
@@ -497,8 +477,7 @@ def main():
     # -----------------------------
     # Save the Final Model
     # -----------------------------
-    # Since the data is already scaled, there's no need to save the scaler.
-    save_model_and_scaler(best_model, scaler=None, model_path='best_neural_network_model.keras')
+    save_model_and_scaler(best_model, model_path='best_neural_network_model.keras')
     
     print("\nNeural Network model building process completed successfully!")
 
