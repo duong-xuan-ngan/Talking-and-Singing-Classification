@@ -26,7 +26,7 @@ def extract_features(file_path):
         y_trimmed, _ = librosa.effects.trim(y, top_db=20)  # trim the part where the audio is less than 20db
 
         # initialize a dictionary to store all the extracted features
-        features = {}
+        features = {'file_name': os.path.basename(file_path)}
         
         # initialize a helper function which computes the mean and standard deviation then stores in the dictionary
         def add_features(feature, name_prefix):
@@ -179,18 +179,31 @@ def main():
     print(f"Training set size: {X_train.shape[0]} samples")
     print(f"Testing set size: {X_test.shape[0]} samples")
 
-    # initialize the MinMaxScaler
+    # Separate features and labels, drop 'file_name' before scaling
+    X = df.drop(['label', 'file_name'], axis=1)  # Drop 'file_name' along with 'label'
+    y = df['label']
+
+    # Initialize the MinMaxScaler
     scaler = MinMaxScaler()
 
-    # fit the scaler on the training data and transform both training and testing data
+    # Split data into training and testing sets (if not done already)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+
+    # Fit the scaler on the training data and transform both training and testing data
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
 
-    # convert scaled data back to DataFrames
+    # Convert scaled data back to DataFrames
     X_train_scaled_df = pd.DataFrame(X_train_scaled, columns=X.columns)
     X_test_scaled_df = pd.DataFrame(X_test_scaled, columns=X.columns)
 
-    # concatenate the labels back to the scaled features
+    # Add 'file_name' column back to the scaled data (you can access the original 'file_name' column from the original df)
+    X_train_scaled_df['file_name'] = df.loc[X_train.index, 'file_name'].reset_index(drop=True)
+    X_test_scaled_df['file_name'] = df.loc[X_test.index, 'file_name'].reset_index(drop=True)
+
+    # Concatenate the labels back to the scaled features
     train_normalized_df = pd.concat([X_train_scaled_df, y_train.reset_index(drop=True)], axis=1)
     test_normalized_df = pd.concat([X_test_scaled_df, y_test.reset_index(drop=True)], axis=1)
 
@@ -198,13 +211,8 @@ def main():
     train_normalized_df.to_csv('Talking-and-Singing-Classification/train_features_scaled.csv', index=False)
     test_normalized_df.to_csv('Talking-and-Singing-Classification/test_features_scaled.csv', index=False)
 
-    logging.info("Feature normalization complete. Data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'")
-    print("Feature normalization complete. Data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'")
-
     # Save the scaler for future use
     joblib.dump(scaler, 'minmax_scaler.save')
-    logging.info("Scaler saved to 'minmax_scaler.save'")
-    print("Scaler saved to 'minmax_scaler.save'")
 
     print("Completed!")
 
