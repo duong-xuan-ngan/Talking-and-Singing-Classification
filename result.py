@@ -3,6 +3,7 @@ import pandas as pd
 import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
 
+
 # Load the trained model
 model = tf.keras.models.load_model('best_neural_network_model.keras')
 
