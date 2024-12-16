@@ -40,4 +40,3 @@ for i in range(len(predictions_prob)):
     print(f"Sample {i + 1}:")
     print(f"  Probability of Singing: {prob:.4f}")
     print(f"  Predicted Label: {label}")
-
