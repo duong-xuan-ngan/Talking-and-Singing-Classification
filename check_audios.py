@@ -30,14 +30,14 @@ print("Wrong predictions (Sample Number: Predicted Label -> True Label):")
 for i in incorrect_indices:
     pred_label = "Singing" if predicted_labels[i] == 1 else "Talking"
     true_label = "Singing" if true_labels[i] == 1 else "Talking"
-    print(f"Sample {i + 1}: {pred_label} -> {true_label}")
+    print(f"Sample {i + 1}: The result is '{pred_label}' but actually is '{true_label}'")
 
 # Extract incorrect samples and their details
-wrong_samples = data.iloc[incorrect_indices].copy()
-wrong_samples['Predicted_Label'] = ["Singing" if pred == 1 else "Talking" for pred in predicted_labels[incorrect_indices]]
-wrong_samples['True_Label'] = ["Singing" if label == 1 else "Talking" for label in true_labels[incorrect_indices]]
+wrong_audios = data.iloc[incorrect_indices].copy()
+wrong_audios['Predicted_Label'] = ["Singing" if pred == 1 else "Talking" for pred in predicted_labels[incorrect_indices]]
+wrong_audios['True_Label'] = ["Singing" if label == 1 else "Talking" for label in true_labels[incorrect_indices]]
 
 # Save the wrong samples to a CSV file
-wrong_samples.to_csv('wrong_samples.csv', index=False)
+wrong_audios.to_csv('wrong_audios.csv', index=False)
 
-print("File 'wrong_samples.csv' has been created with incorrect predictions.")
+print("File 'wrong_audios.csv' has been created with incorrect predictions.")
