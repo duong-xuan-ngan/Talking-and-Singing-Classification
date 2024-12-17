@@ -5,30 +5,27 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 # Load the trained model
-model = tf.keras.models.load_model('best_neural_network_model.keras')
+model = tf.keras.models.load_model('best_neural_network_model.h5')
 
 # Load and preprocess the input data
-input_file = 'test_features_scaled.csv'
+input_file = 'testing.csv'
 data = pd.read_csv(input_file)
+print(data)
 
 # Print the shape of the data to check the number of features
 print("Original data shape:", data.shape)
 
 # If the label is the last column, remove it
-X = data.iloc[:, :-1].values  # Exclude the label column
+X = data.iloc[:, :-2].values  # Exclude the label column
 
 # Print the shape after excluding the label
 print("Shape after excluding label:", X.shape)
 
-# Use MinMaxScaler (consistent with original preprocessing)
-scaler = MinMaxScaler()
-X_scaled = scaler.fit_transform(X)
-
 # Ensure the input shape is correct for prediction
-print("Scaled input shape:", X_scaled.shape)
+print("Scaled input shape:", X.shape)
 
 # Make predictions
-predictions_prob = model.predict(X_scaled)
+predictions_prob = model.predict(X)
 
 # Convert probabilities to binary predictions
 predictions = (predictions_prob >= 0.5).astype(int)
@@ -41,4 +38,3 @@ for i in range(len(predictions_prob)):
     print(f"Sample {i + 1}:")
     print(f"  Probability of Singing: {prob:.4f}")
     print(f"  Predicted Label: {label}")
-
