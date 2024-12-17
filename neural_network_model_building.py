@@ -15,6 +15,21 @@ from sklearn.utils import class_weight
 from imblearn.over_sampling import SMOTE  # For handling class imbalance
 from tqdm import tqdm  # For progress bars
 import keras_tuner as kt
+import sys
+
+class Tee(object):
+    def __init__(self, *files):
+        self.files = files
+
+    def write(self, obj):
+        for f in self.files:
+            f.write(obj)
+            f.flush()  # Ensure it's written immediately
+
+    def flush(self):
+        for f in self.files:
+            f.flush()
+
 
 # Suppress TensorFlow warnings for cleaner output
 import logging
@@ -477,7 +492,7 @@ def main():
     # -----------------------------
     # Save the Final Model
     # -----------------------------
-    save_model_and_scaler(best_model, model_path='best_neural_network_model.keras')
+    save_model_and_scaler(best_model, model_path='best_neural_network_model.h5')
     
     print("\nNeural Network model building process completed successfully!")
 

@@ -1,43 +1,71 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-from sklearn.preprocessing import MinMaxScaler
 
 # Load the trained model
-model = tf.keras.models.load_model('best_neural_network_model.keras')
+model = tf.keras.models.load_model('best_neural_network_model.h5')
 
-# Load and preprocess the input data
-input_file = 'test_features_scaled.csv'
+# Load the input test data
+input_file = 'testing.csv'  # Use the test dataset
 data = pd.read_csv(input_file)
 
-# Split features and true labels
-X = data.iloc[:, :-1].values  # Exclude the label column
-true_labels = data.iloc[:, -1].values  # Assuming the last column contains true labels
+# Ensure 'file_name' and 'label' columns exist
+required_columns = ['file_name', 'label']
+for col in required_columns:
+    if col not in data.columns:
+        raise KeyError(f"Missing required column: '{col}'")
 
-# Scale the features using MinMaxScaler
-scaler = MinMaxScaler()
-X_scaled = scaler.fit_transform(X)
+# Define feature columns explicitly
+feature_columns = [col for col in data.columns if col not in ['file_name', 'label']]
 
-# Make predictions
-predictions_prob = model.predict(X_scaled)
-predicted_labels = (predictions_prob >= 0.5).astype(int).flatten()
+# Extract features and labels
+X = data[feature_columns].values
+y_true = data['label'].values  # Extract true labels
+file_names = data['file_name'].values  # Extract file names
 
-# Find incorrectly classified samples
-incorrect_indices = np.where(predicted_labels != true_labels)[0]
+# Observe what is the X
+print("X is: ")
+print(X)
 
-# Print out the wrong predictions with sample numbers
-print("Wrong predictions (Sample Number: Predicted Label -> True Label):")
+# Print the shape after excluding label
+print("Shape after excluding 'file_name' and 'label':", X.shape)
+print("Labels shape:", y_true.shape)
+
+# Ensure the input shape is correct for prediction
+print("Input shape for prediction:", X.shape)
+
+# Make predictions (No scaling applied since data is already scaled)
+predictions_prob = model.predict(X, batch_size=32, verbose=1)
+
+# Convert probabilities to binary predictions
+predictions = (predictions_prob >= 0.5).astype(int).flatten()
+
+# Detailed prediction output
+for i in range(len(predictions_prob)):
+    prob = predictions_prob[i][0]  # Probability of 'Singing'
+    pred = predictions[i]  # Binary prediction
+    label = "Singing" if pred == 1 else "Talking"
+    actual_label = "Singing" if y_true[i] == 1 else "Talking"
+    print(f"File '{file_names[i]}':")
+    print(f"  Probability of Singing: {prob:.4f}")
+    print(f"  Predicted Label: {label} (Actual: {actual_label})")
+
+# Find misclassified samples
+incorrect_indices = np.where(predictions != y_true)[0]
+
+# Print out the misclassifications
+print("\nWrong predictions (File Name: Predicted Label -> True Label):")
 for i in incorrect_indices:
-    pred_label = "Singing" if predicted_labels[i] == 1 else "Talking"
-    true_label = "Singing" if true_labels[i] == 1 else "Talking"
-    print(f"Sample {i + 1}: The result is '{pred_label}' but actually is '{true_label}'")
+    pred_label = "Singing" if predictions[i] == 1 else "Talking"
+    actual_label = "Singing" if y_true[i] == 1 else "Talking"
+    print(f"File '{file_names[i]}': The result is '{pred_label}' but actually is '{actual_label}'")
 
-# Extract incorrect samples and their details
-wrong_audios = data.iloc[incorrect_indices].copy()
-wrong_audios['Predicted_Label'] = ["Singing" if pred == 1 else "Talking" for pred in predicted_labels[incorrect_indices]]
-wrong_audios['True_Label'] = ["Singing" if label == 1 else "Talking" for label in true_labels[incorrect_indices]]
-
-# Save the wrong samples to a CSV file
-wrong_audios.to_csv('wrong_audios.csv', index=False)
-
-print("File 'wrong_audios.csv' has been created with incorrect predictions.")
+# Optionally, save misclassified samples to a CSV file
+if len(incorrect_indices) > 0:
+    wrong_audios = data.iloc[incorrect_indices].copy()
+    wrong_audios['Predicted_Label'] = ["Singing" if pred == 1 else "Talking" for pred in predictions[incorrect_indices]]
+    wrong_audios['True_Label'] = ["Singing" if label == 1 else "Talking" for label in y_true[incorrect_indices]]
+    wrong_audios.to_csv('wrong_audios.csv', index=False)
+    print("\nFile 'wrong_audios.csv' has been created with incorrect predictions.")
+else:
+    print("\nNo misclassifications found.")
