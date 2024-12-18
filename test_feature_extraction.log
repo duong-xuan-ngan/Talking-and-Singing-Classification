@@ -1,0 +1,36 @@
+2024-12-18 16:05:45,243 INFO:Found 37 audio files in 'test_data'.
+2024-12-18 16:05:45,243 INFO:Total files to process: 37
+2024-12-18 16:05:45,243 ERROR:Time range log file does not exist: C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification\Talking-and-Singing-Classification	ime_ranges.log
+2024-12-18 16:05:45,243 WARNING:No time ranges found. The 'time_range' column will be empty.
+2024-12-18 16:05:53,642 INFO:Successfully extracted features for 37 files.
+2024-12-18 16:05:53,646 ERROR:Scaler file does not exist: C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification\minmax_scaler.save
+2024-12-18 16:18:49,305 INFO:Found 37 audio files in 'test_data'.
+2024-12-18 16:18:49,305 INFO:Total files to process: 37
+2024-12-18 16:18:54,427 INFO:Successfully extracted features for 37 files.
+2024-12-18 16:18:54,429 INFO:Pre-fitted scaler loaded successfully.
+2024-12-18 16:18:54,453 INFO:Scaled test features saved to 'C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification\Talking-and-Singing-Classification\test_features_scaled.csv'
+2024-12-18 16:23:07,428 INFO:Found 37 audio files in 'test_data'.
+2024-12-18 16:23:07,428 INFO:Total files to process: 37
+2024-12-18 16:23:12,533 INFO:Successfully extracted features for 37 files.
+2024-12-18 16:23:12,533 INFO:Pre-fitted scaler loaded successfully.
+2024-12-18 16:23:12,539 INFO:Scaled test features saved to 'C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification\test_features_scaled.csv'
+2024-12-18 16:38:47,328 INFO:Script Directory: C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification
+2024-12-18 16:38:47,329 INFO:Files in script_dir (C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification): ['.git', 'cat.gitignore', 'cat.py', 'cat.txt', 'features.csv', 'feature_extraction.log', 'main.py', 'minmax_scaler.save', 'README.md', 'test_data', 'test_features_scaled.csv', 'test_feature_extraction.log', 'time_ranges.csv', 'train_features_scaled.csv']
+2024-12-18 16:38:47,329 INFO:Found 0 audio files in 'test_data'.
+2024-12-18 16:38:47,330 INFO:Total files to process: 0
+2024-12-18 16:38:47,330 ERROR:No audio files found in 'test_data'. Exiting the script.
+2024-12-18 16:39:24,919 INFO:Script Directory: C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification
+2024-12-18 16:39:24,919 INFO:Files in script_dir (C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification): ['.git', 'cat.gitignore', 'cat.py', 'cat.txt', 'features.csv', 'feature_extraction.log', 'main.py', 'minmax_scaler.save', 'README.md', 'test_data', 'test_features_scaled.csv', 'test_feature_extraction.log', 'time_ranges.csv', 'train_features_scaled.csv']
+2024-12-18 16:39:24,928 INFO:Found 37 audio files in 'test_data'.
+2024-12-18 16:39:24,928 INFO:Total files to process: 37
+2024-12-18 16:39:24,941 ERROR:CSV file C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification\time_ranges.csv is missing required columns 'filename' and/or 'time_range'.
+2024-12-18 16:39:24,941 WARNING:No time ranges found. The 'time_range' column will be empty.
+2024-12-18 16:44:45,141 INFO:Script Directory: C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification
+2024-12-18 16:44:45,142 INFO:Files in script_dir (C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification): ['.git', 'cat.gitignore', 'cat.py', 'cat.txt', 'features.csv', 'feature_extraction.log', 'main.py', 'minmax_scaler.save', 'README.md', 'test_data', 'test_features_scaled.csv', 'test_feature_extraction.log', 'time_ranges.csv', 'train_features_scaled.csv']
+2024-12-18 16:44:45,142 INFO:Found 37 audio files in 'test_data'.
+2024-12-18 16:44:45,142 INFO:Total files to process: 37
+2024-12-18 16:44:45,142 ERROR:CSV file C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification\time_ranges.csv is missing required columns 'filename' and/or 'time_range'.
+2024-12-18 16:44:45,142 WARNING:No time ranges found. The 'time_range' column will be empty.
+2024-12-18 16:44:53,514 INFO:Successfully extracted features for 37 files.
+2024-12-18 16:44:53,524 INFO:Pre-fitted scaler loaded successfully.
+2024-12-18 16:44:53,542 INFO:Scaled test features saved to 'C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification\test_features_scaled.csv'
