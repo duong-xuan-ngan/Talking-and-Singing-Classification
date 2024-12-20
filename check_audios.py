@@ -3,7 +3,7 @@ import pandas as pd
 import tensorflow as tf
 
 # Load the trained model
-model = tf.keras.models.load_model('best_neural_network_model.h5')
+model = tf.keras.models.load_model('models/best_neural_network_model.h5')
 
 # Load the input test data
 input_file = 'testing.csv'  # Use the test dataset
@@ -35,7 +35,7 @@ print("Labels shape:", y_true.shape)
 print("Input shape for prediction:", X.shape)
 
 # Make predictions (No scaling applied since data is already scaled)
-predictions_prob = model.predict(X, batch_size=32, verbose=1)
+predictions_prob = model.predict(X, batch_size=1, verbose=1)
 
 # Convert probabilities to binary predictions
 predictions = (predictions_prob >= 0.5).astype(int).flatten()
@@ -58,14 +58,40 @@ print("\nWrong predictions (File Name: Predicted Label -> True Label):")
 for i in incorrect_indices:
     pred_label = "Singing" if predictions[i] == 1 else "Talking"
     actual_label = "Singing" if y_true[i] == 1 else "Talking"
-    print(f"File '{file_names[i]}': The result is '{pred_label}' but actually is '{actual_label}'")
+    prob = predictions_prob[i][0]  # Get the probability
+    print(f"File '{file_names[i]}': The result is '{pred_label}' (probability: {prob:.4f}) but actually is '{actual_label}'")
 
 # Optionally, save misclassified samples to a CSV file
 if len(incorrect_indices) > 0:
+    # Get current misclassifications
     wrong_audios = data.iloc[incorrect_indices].copy()
-    wrong_audios['Predicted_Label'] = ["Singing" if pred == 1 else "Talking" for pred in predictions[incorrect_indices]]
-    wrong_audios['True_Label'] = ["Singing" if label == 1 else "Talking" for label in y_true[incorrect_indices]]
-    wrong_audios.to_csv('wrong_audios.csv', index=False)
-    print("\nFile 'wrong_audios.csv' has been created with incorrect predictions.")
+    
+    # Reorder columns to match training data format
+    # First all feature columns, then file_name, then label
+    column_order = feature_columns + ['file_name', 'label']
+    wrong_audios = wrong_audios[column_order]
+    
+    try:
+        # Try to read existing wrong_audios.csv
+        existing_wrong_audios = pd.read_csv('wrong_audios.csv')
+        print("\nFound existing wrong_audios.csv with", len(existing_wrong_audios), "samples")
+        
+        # Combine existing and new misclassifications
+        combined_wrong_audios = pd.concat([existing_wrong_audios, wrong_audios], axis=0)
+        
+        # Remove duplicates based on file_name to keep latest prediction
+        combined_wrong_audios = combined_wrong_audios.drop_duplicates(subset=['file_name'], keep='last')
+        
+        # Save the updated dataset
+        combined_wrong_audios.to_csv('wrong_audios.csv', index=False)
+        print(f"Updated wrong_audios.csv - Total misclassified samples: {len(combined_wrong_audios)}")
+        print(f"Added {len(wrong_audios)} new misclassifications")
+        
+    except FileNotFoundError:
+        # If wrong_audios.csv doesn't exist, create it with current misclassifications
+        wrong_audios.to_csv('wrong_audios.csv', index=False)
+        print(f"\nCreated new wrong_audios.csv with {len(wrong_audios)} misclassified samples")
+    
+    print("Format: features + file_name + label (matches training data format)")
 else:
-    print("\nNo misclassifications found.")
+    print("\nNo misclassifications found in this run.")

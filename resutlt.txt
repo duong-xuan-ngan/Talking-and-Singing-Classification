@@ -1,0 +1,46 @@
+Features.csv
+--------------------------------------------
+File 'vocal1.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal10.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal11.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal12.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal13.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal14.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal15.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal16.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal17.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal18.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal19.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal2.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal20.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal21.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal22.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal23.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal24.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal25.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal26.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal27.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal28.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal29.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal3.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal30.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal31.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal32.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal33.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal34.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal35.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal36.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal37.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal38.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal39.wav': The result is 'Singing' but actually is 'Talking'
+File 'vocal4.wav': The result is 'Singing' but actually is 'Talking'
+------------------------------------------------------
+
+
+train_features_scaled.csv
+------------------------
+File 'vocal3.wav': The result is 'Talking' (probability: 0.4937) but actually is 'Singing'     
+File 'vocal2.wav': The result is 'Singing' (probability: 0.7012) but actually is 'Talking'     
+File 'vocal31.wav': The result is 'Singing' (probability: 0.5531) but actually is 'Talking'    
+File 'vocal2.wav': The result is 'Talking' (probability: 0.3723) but actually is 'Singing'  
+

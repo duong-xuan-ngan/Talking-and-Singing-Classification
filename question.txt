@@ -1,0 +1,11 @@
+Do your code given affect the previous model, right? When I use this code to retrain my model for the wrong classification my previous model made,  the new model even predicts much more wrongly than my previous model made.
+
+Here is the extra information you need to consider:
++ About the retraining step, the wrong audio contains about 22 rows (22 different audio) and it is divided into two files train_features_scaled.csv and test_features_scaled.csv.
++ Does the code given avoid Catastrophic Forgetting?
+
+Is the dataset given for retraining too little, and does it make the model lose its power of prediction? 
+
+I observed that the process of retraining data is below 30 seconds minutes, too short, right? And I see that there is also the training function in the retraining process? I have a question when the training process stops, does it will train until it reaches specific criteria? If yes, what it is? 
+
+Do you think that the retaining does not update the mechanism, but it actually alters the old mechanism to make it worse? Please check your model carefully
