@@ -1,8 +1,0 @@
-2024-12-08 21:51:50,021 INFO:Found 0 singing files and 0 talking files.
-2024-12-08 21:51:50,021 INFO:Total files to process: 0
-2024-12-08 21:51:50,036 INFO:Successfully extracted features for 0 files.
-2024-12-08 21:51:50,036 INFO:Feature extraction complete. Data saved to 'features.csv'
-2024-12-08 22:07:03,594 INFO:Found 0 singing files and 0 talking files.
-2024-12-08 22:07:03,594 INFO:Total files to process: 0
-2024-12-08 22:07:03,613 INFO:Successfully extracted features for 0 files.
-2024-12-08 22:07:03,613 INFO:Feature extraction complete. Data saved to 'features.csv'
