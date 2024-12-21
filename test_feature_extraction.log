@@ -34,3 +34,7 @@
 2024-12-18 16:44:53,514 INFO:Successfully extracted features for 37 files.
 2024-12-18 16:44:53,524 INFO:Pre-fitted scaler loaded successfully.
 2024-12-18 16:44:53,542 INFO:Scaled test features saved to 'C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification\test_features_scaled.csv'
+2024-12-18 22:58:07,670 INFO:Found 120 audio files in 'test_data'.
+2024-12-18 22:58:07,685 INFO:Successfully loaded time ranges from C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification\time_ranges.csv
+2024-12-18 22:58:14,808 INFO:Pre-fitted scaler loaded successfully.
+2024-12-18 22:58:14,824 INFO:Scaled test features saved to 'C:\Users\phatt\OneDrive\Desktop\code\intro_project\Talking-and-Singing-Classification\test_features_scaled.csv'
