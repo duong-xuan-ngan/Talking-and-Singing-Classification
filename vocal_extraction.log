@@ -1,0 +1,53 @@
+2024-12-21 19:49:46,808 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-21 19:49:55,024 - INFO - File split_vocal\vocal1/vocals.wav written succesfully
+2024-12-21 19:49:55,039 - INFO - File split_vocal\vocal1/accompaniment.wav written succesfully
+2024-12-21 19:49:55,042 - INFO - Extracted vocals from 'split_audio\vocal1.wav' to 'split_vocal\vocal1\vocals.wav'.
+2024-12-21 19:49:55,042 - INFO - Deleted accompaniment file 'split_vocal\vocal1\accompaniment.wav'.
+2024-12-21 19:49:55,042 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-21 19:51:49,632 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-21 19:51:57,644 - INFO - File split_vocal\vocal1/vocals.wav written succesfully
+2024-12-21 19:51:57,654 - INFO - File split_vocal\vocal1/accompaniment.wav written succesfully
+2024-12-21 19:51:57,654 - INFO - Extracted vocals from 'split_audio\vocal1.wav' to 'split_vocal\vocal1\vocals.wav'.
+2024-12-21 19:51:57,659 - INFO - Deleted accompaniment file 'split_vocal\vocal1\accompaniment.wav'.
+2024-12-21 19:51:57,661 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-21 19:55:32,782 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-21 19:55:33,027 - ERROR - Failed to extract vocals from 'split_audio\vocal1.wav': 'str' object has no attribute 'shape'
+2024-12-21 19:55:33,027 - ERROR - Error processing 'split_audio\vocal1.wav': Failed to extract vocals from 'split_audio\vocal1.wav': 'str' object has no attribute 'shape'
+2024-12-21 19:55:33,027 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-21 19:59:25,417 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-21 19:59:25,657 - ERROR - Failed to extract vocals from 'split_audio\vocal1.wav': 'str' object has no attribute 'shape'
+2024-12-21 19:59:25,657 - ERROR - Error processing 'split_audio\vocal1.wav': Failed to extract vocals from 'split_audio\vocal1.wav': 'str' object has no attribute 'shape'
+2024-12-21 19:59:25,672 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-21 20:08:10,279 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-21 20:08:10,512 - ERROR - Failed to extract vocals from 'split_audio\chunk1.wav': 'str' object has no attribute 'shape'
+2024-12-21 20:08:10,512 - ERROR - Error processing 'split_audio\chunk1.wav': Failed to extract vocals from 'split_audio\chunk1.wav': 'str' object has no attribute 'shape'
+2024-12-21 20:08:10,512 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-21 20:08:40,906 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-21 20:08:41,149 - ERROR - Failed to extract vocals from 'split_audio\chunk1.wav': 'str' object has no attribute 'shape'
+2024-12-21 20:08:41,150 - ERROR - Error processing 'split_audio\chunk1.wav': Failed to extract vocals from 'split_audio\chunk1.wav': 'str' object has no attribute 'shape'
+2024-12-21 20:08:41,151 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-21 20:09:10,882 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-21 20:09:18,703 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-21 20:09:18,715 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-21 20:09:18,717 - INFO - Extracted vocals from 'split_audio\chunk1.wav' to 'split_vocal\chunk1\vocals.wav'.
+2024-12-21 20:09:18,717 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-21 20:09:18,718 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-21 20:13:27,701 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-21 20:13:35,609 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-21 20:13:35,633 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-21 20:13:35,635 - INFO - Extracted vocals saved to 'split_vocal\chunk1.wav'.
+2024-12-21 20:13:35,636 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-21 20:13:35,637 - INFO - Deleted empty directory 'split_vocal\chunk1'.
+2024-12-21 20:13:35,638 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-21 20:15:25,409 - INFO - Starting vocal extraction for 2 files with 4 workers.
+2024-12-21 20:15:37,359 - INFO - File split_vocal\chunk2/accompaniment.wav written succesfully
+2024-12-21 20:15:37,359 - INFO - File split_vocal\chunk2/vocals.wav written succesfully
+2024-12-21 20:15:37,359 - INFO - Extracted vocals saved to 'split_vocal\chunk3.wav'.
+2024-12-21 20:15:37,359 - INFO - Deleted accompaniment file 'split_vocal\chunk2\accompaniment.wav'.
+2024-12-21 20:15:37,359 - INFO - Deleted empty directory 'split_vocal\chunk2'.
+2024-12-21 20:15:39,082 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-21 20:15:39,102 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-21 20:15:39,106 - INFO - Extracted vocals saved to 'split_vocal\chunk2.wav'.
+2024-12-21 20:15:39,106 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-21 20:15:39,107 - INFO - Deleted empty directory 'split_vocal\chunk1'.
+2024-12-21 20:15:39,109 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.

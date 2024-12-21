@@ -1,0 +1,3 @@
+2024-12-21 20:46:12,128 INFO:Found 2 WAV file(s) in 'C:\Users\phatt\Desktop\code\intro\Talking-and-Signing-Classification\final'. Starting feature extraction.
+2024-12-21 20:46:14,823 INFO:Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Signing-Classification\data.csv'.
+2024-12-21 20:46:14,828 INFO:Scaler saved to 'minmax_scaler_final.save'.
