@@ -33,3 +33,27 @@
 2024-12-13 15:59:55,987 INFO:Feature extraction complete. Data saved to 'features.csv'
 2024-12-13 15:59:56,037 INFO:Training set size: 1601 samples
 2024-12-13 15:59:56,037 INFO:Testing set size: 401 samples
+2024-12-21 21:55:34,826 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Signing-Classification\data
+2024-12-21 21:55:34,826 INFO:Found 1001 singing files and 81 talking files.
+2024-12-21 21:55:34,826 INFO:Total files to process: 1082
+2024-12-21 22:17:47,153 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-21 22:17:47,169 INFO:Found 1001 singing files and 1001 talking files.
+2024-12-21 22:17:47,169 INFO:Total files to process: 2002
+2024-12-21 22:21:06,777 INFO:Successfully extracted features for 2002 files.
+2024-12-21 22:21:06,936 INFO:Feature extraction complete. Data saved to 'features.csv'
+2024-12-21 22:21:06,990 INFO:Training set size: 1601 samples
+2024-12-21 22:21:06,990 INFO:Testing set size: 401 samples
+2024-12-21 23:12:41,680 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-21 23:12:41,697 INFO:Found 1001 singing files and 1001 talking files.
+2024-12-21 23:12:41,697 INFO:Total files to process: 2002
+2024-12-21 23:15:35,015 INFO:Successfully extracted features for 2002 files.
+2024-12-21 23:15:35,152 INFO:Feature extraction complete. Data saved to 'features.csv'
+2024-12-21 23:15:35,195 INFO:Training set size: 1601 samples
+2024-12-21 23:15:35,195 INFO:Testing set size: 401 samples
+2024-12-21 23:18:19,138 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-21 23:18:19,154 INFO:Found 1001 singing files and 1001 talking files.
+2024-12-21 23:18:19,154 INFO:Total files to process: 2002
+2024-12-21 23:21:10,337 INFO:Successfully extracted features for 2002 files.
+2024-12-21 23:21:10,468 INFO:Feature extraction complete. Data saved to 'features.csv'
+2024-12-21 23:21:10,511 INFO:Training set size: 1601 samples
+2024-12-21 23:21:10,511 INFO:Testing set size: 401 samples

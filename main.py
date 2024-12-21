@@ -208,8 +208,8 @@ def main():
     test_normalized_df = pd.concat([X_test_scaled_df, y_test.reset_index(drop=True)], axis=1)
 
     # Save the scaled data to CSV files
-    train_normalized_df.to_csv('Talking-and-Singing-Classification/train_features_scaled.csv', index=False)
-    test_normalized_df.to_csv('Talking-and-Singing-Classification/test_features_scaled.csv', index=False)
+    train_normalized_df.to_csv('train_features_scaled.csv', index=False)
+    test_normalized_df.to_csv('test_features_scaled.csv', index=False)
 
     # Save the scaler for future use
     joblib.dump(scaler, 'minmax_scaler.save')
