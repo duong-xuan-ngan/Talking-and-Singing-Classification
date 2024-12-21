@@ -8,3 +8,9 @@
 2024-12-21 20:15:07,638 - INFO - Exported 'chunk2.wav'.
 2024-12-21 20:15:07,638 - INFO - Splitting completed successfully.
 2024-12-21 20:15:07,638 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-21 23:44:27,027 - ERROR - The file '"C:\Users\phatt\Desktop\code\data_intro\data1\singing\vocal25.wav"' does not exist. Please provide a valid file path.
+2024-12-21 23:44:38,493 - INFO - Input file is already in WAV format: 'C:\Users\phatt\Desktop\code\data_intro\data1\singing\vocal25.wav'.
+2024-12-21 23:44:39,507 - INFO - Starting chunk numbering from 1.
+2024-12-21 23:44:39,519 - INFO - Exported 'chunk1.wav'.
+2024-12-21 23:44:39,520 - INFO - Splitting completed successfully.
+2024-12-21 23:44:39,520 - INFO - All split audio files are saved in the 'split_audio' directory.

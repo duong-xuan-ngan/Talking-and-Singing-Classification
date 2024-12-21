@@ -96,13 +96,15 @@ def extract_features(file_path, top_db=20):
 
     return features
 
-def process_final_folder(final_folder='final', output_csv='data.csv'):
+def process_final_folder(final_folder='final', output_csv='data.csv', scaler_path='minmax_scaler.save'):
     """
     Processes each WAV file in the final folder to extract features and save them to a CSV file.
+    Utilizes an existing MinMaxScaler if available.
 
     Parameters:
     - final_folder (str): Path to the 'final' directory containing WAV files.
     - output_csv (str): Path to the output CSV file.
+    - scaler_path (str): Path to the MinMaxScaler save file.
     """
     # Verify that the final folder exists
     if not os.path.isdir(final_folder):
@@ -150,11 +152,46 @@ def process_final_folder(final_folder='final', output_csv='data.csv'):
     X = df[feature_columns]
     file_names = df['file_name']
 
-    # Initialize the MinMaxScaler
-    scaler = MinMaxScaler()
+    # Initialize or load the MinMaxScaler
+    if os.path.exists(scaler_path):
+        try:
+            scaler = joblib.load(scaler_path)
+            logging.info(f"Loaded existing scaler from '{scaler_path}'.")
+            print(f"Loaded existing scaler from '{scaler_path}'.")
+        except Exception as e:
+            logging.error(f"Error loading scaler from '{scaler_path}': {e}")
+            print(f"Error loading scaler from '{scaler_path}'. Exiting the script.")
+            return
+    else:
+        scaler = MinMaxScaler()
+        logging.info("Initialized a new MinMaxScaler.")
+        print("Initialized a new MinMaxScaler.")
 
     # Scale the features
-    X_scaled = scaler.fit_transform(X)
+    if os.path.exists(scaler_path):
+        # If scaler exists, only transform the data
+        try:
+            X_scaled = scaler.transform(X)
+            logging.info("Transformed data using the existing scaler.")
+            print("Transformed data using the existing scaler.")
+        except Exception as e:
+            logging.error(f"Error transforming data with the existing scaler: {e}")
+            print(f"Error transforming data with the existing scaler: {e}. Exiting the script.")
+            return
+    else:
+        # If scaler does not exist, fit and transform the data, then save the scaler
+        try:
+            X_scaled = scaler.fit_transform(X)
+            logging.info("Fitted and transformed data using a new scaler.")
+            print("Fitted and transformed data using a new scaler.")
+            # Save the newly fitted scaler
+            joblib.dump(scaler, scaler_path)
+            logging.info(f"Saved the new scaler to '{scaler_path}'.")
+            print(f"Saved the new scaler to '{scaler_path}'.")
+        except Exception as e:
+            logging.error(f"Error fitting and transforming data: {e}")
+            print(f"Error fitting and transforming data: {e}. Exiting the script.")
+            return
 
     # Create a scaled DataFrame
     df_scaled = pd.DataFrame(X_scaled, columns=feature_columns)
@@ -165,15 +202,14 @@ def process_final_folder(final_folder='final', output_csv='data.csv'):
     df_scaled = df_scaled[cols]
 
     # Save the scaled features to CSV
-    df_scaled.to_csv(output_csv, index=False)
-    logging.info(f"Feature extraction complete. Data saved to '{output_csv}'.")
-    print(f"Feature extraction complete. Data saved to '{output_csv}'.")
-
-    # Save the scaler for future use
-    scaler_path = 'minmax_scaler_final.save'
-    joblib.dump(scaler, scaler_path)
-    logging.info(f"Scaler saved to '{scaler_path}'.")
-    print(f"Scaler saved to '{scaler_path}'.")
+    try:
+        df_scaled.to_csv(output_csv, index=False)
+        logging.info(f"Feature extraction complete. Data saved to '{output_csv}'.")
+        print(f"Feature extraction complete. Data saved to '{output_csv}'.")
+    except Exception as e:
+        logging.error(f"Error saving scaled data to '{output_csv}': {e}")
+        print(f"Error saving scaled data to '{output_csv}': {e}. Exiting the script.")
+        return
 
 def main():
     """
@@ -186,8 +222,11 @@ def main():
     # Define the output CSV path
     output_csv = os.path.join(current_directory, 'data.csv')
 
+    # Define the scaler save path
+    scaler_path = os.path.join(current_directory, 'minmax_scaler.save')
+
     # Start processing
-    process_final_folder(final_folder=final_folder, output_csv=output_csv)
+    process_final_folder(final_folder=final_folder, output_csv=output_csv, scaler_path=scaler_path)
 
 if __name__ == "__main__":
     main()

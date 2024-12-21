@@ -43,7 +43,7 @@ msgpack==1.1.0
 namex==0.0.8
 norbert==0.2.1
 numba==0.60.0
-numpy==1.26.4
+numpy<1.24.0,>=1.19.2
 oauthlib==3.2.2
 opt_einsum==3.4.0
 optree==0.13.1
@@ -77,7 +77,6 @@ tensorboard-plugin-wit==1.8.1
 tensorflow==2.9.3
 tensorflow-estimator==2.9.0
 tensorflow-io-gcs-filesystem==0.31.0
-tensorflow_intel==2.18.0
 termcolor==2.5.0
 threadpoolctl==3.5.0
 tqdm==4.67.1
