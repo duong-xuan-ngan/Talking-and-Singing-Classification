@@ -65,3 +65,235 @@
 2024-12-22 13:45:55,536 - INFO - Exported 'chunk1.wav'.
 2024-12-22 13:45:55,536 - INFO - Splitting completed successfully.
 2024-12-22 13:45:55,536 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 16:58:37,806 - INFO - Input file is already in WAV format: 'C:\Users\phatt\Desktop\code\data_intro\data1\singing\vocal59.wav'.
+2024-12-22 16:58:38,806 - INFO - Starting chunk numbering from 1.
+2024-12-22 16:58:38,818 - INFO - Exported 'chunk1.wav'.
+2024-12-22 16:58:38,819 - INFO - Splitting completed successfully.
+2024-12-22 16:58:38,819 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 16:58:38,821 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-22 16:58:45,965 - INFO - Downloading model archive https://github.com/deezer/spleeter/releases/download/v1.4.0/2stems.tar.gz
+2024-12-22 16:59:07,510 - INFO - Validating archive checksum
+2024-12-22 16:59:09,418 - INFO - Extracting downloaded 2stems archive
+2024-12-22 16:59:09,866 - INFO - 2stems model file(s) extracted
+2024-12-22 16:59:11,651 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-22 16:59:11,684 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-22 16:59:11,689 - INFO - Extracted vocals saved to 'split_vocal\chunk1.wav'.
+2024-12-22 16:59:11,690 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-22 16:59:11,690 - INFO - Deleted empty directory 'split_vocal\chunk1'.
+2024-12-22 16:59:11,710 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-22 16:59:11,739 - INFO - Found 1 WAV file(s) in 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\final'. Starting feature extraction.
+2024-12-22 16:59:12,488 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-22 16:59:12,491 - INFO - Transformed data using the existing scaler.
+2024-12-22 16:59:12,502 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
+2024-12-22 17:11:13,410 - INFO - Starting download from YouTube URL: https://youtu.be/a-U8osE4BD8?si=1DHnbKoOOiYqw8JF
+2024-12-22 17:11:20,003 - INFO - Downloaded audio from 'https://youtu.be/a-U8osE4BD8?si=1DHnbKoOOiYqw8JF' to 'temp_processing\Eminem - Love The Way You Lie (Lyrics) ft. Rihanna.mp3'.
+2024-12-22 17:11:20,507 - INFO - Converted 'temp_processing\Eminem - Love The Way You Lie (Lyrics) ft. Rihanna.mp3' to 'temp_processing\Eminem - Love The Way You Lie (Lyrics) ft. Rihanna.wav'.
+2024-12-22 17:11:21,526 - INFO - Starting chunk numbering from 1.
+2024-12-22 17:11:21,617 - INFO - Exported 'chunk1.wav'.
+2024-12-22 17:11:21,622 - INFO - Splitting completed successfully.
+2024-12-22 17:11:21,627 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 17:11:21,627 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 17:11:21,629 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-22 17:11:29,766 - INFO - Downloading model archive https://github.com/deezer/spleeter/releases/download/v1.4.0/2stems.tar.gz
+2024-12-22 17:11:51,761 - INFO - Validating archive checksum
+2024-12-22 17:11:53,394 - INFO - Extracting downloaded 2stems archive
+2024-12-22 17:11:53,840 - INFO - 2stems model file(s) extracted
+2024-12-22 17:12:02,843 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-22 17:12:03,064 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-22 17:12:03,082 - INFO - Extracted vocals saved to 'split_vocal\chunk1.wav'.
+2024-12-22 17:12:03,090 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-22 17:12:03,091 - INFO - Deleted empty directory 'split_vocal\chunk1'.
+2024-12-22 17:12:03,123 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-22 17:12:03,280 - INFO - Found 8 WAV file(s) in 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\final'. Starting feature extraction.
+2024-12-22 17:12:09,476 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-22 17:12:09,476 - INFO - Transformed data using the existing scaler.
+2024-12-22 17:12:09,492 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
+2024-12-22 17:14:35,779 - INFO - Starting download from YouTube URL: https://youtu.be/_LlyKiROzhU?si=3AV5tl0mLzkebN3q
+2024-12-22 17:15:09,622 - INFO - Downloaded audio from 'https://youtu.be/_LlyKiROzhU?si=3AV5tl0mLzkebN3q' to 'temp_processing\BOX SET: 6 Minute English - 'Human Emotions' English mega-class! One hour of new vocabulary!.mp3'.
+2024-12-22 17:15:09,622 - ERROR - Failed to convert 'temp_processing\BOX SET: 6 Minute English - 'Human Emotions' English mega-class! One hour of new vocabulary!.mp3' to WAV: [Errno 2] No such file or directory: "temp_processing\\BOX SET: 6 Minute English - 'Human Emotions' English mega-class! One hour of new vocabulary!.mp3"
+2024-12-22 17:15:09,622 - ERROR - An error occurred during processing: Failed to convert 'temp_processing\BOX SET: 6 Minute English - 'Human Emotions' English mega-class! One hour of new vocabulary!.mp3' to WAV: [Errno 2] No such file or directory: "temp_processing\\BOX SET: 6 Minute English - 'Human Emotions' English mega-class! One hour of new vocabulary!.mp3"
+2024-12-22 17:15:09,622 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 17:15:09,622 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 17:15:09,636 - ERROR - The directory 'split_audio' does not exist.
+2024-12-22 17:16:23,333 - INFO - Starting download from YouTube URL: https://youtu.be/a-U8osE4BD8?si=kmqik9V1dgeB4oAv
+2024-12-22 17:16:28,851 - INFO - Downloaded audio from 'https://youtu.be/a-U8osE4BD8?si=kmqik9V1dgeB4oAv' to 'temp_processing\Eminem - Love The Way You Lie (Lyrics) ft. Rihanna.mp3'.
+2024-12-22 17:16:29,376 - INFO - Converted 'temp_processing\Eminem - Love The Way You Lie (Lyrics) ft. Rihanna.mp3' to 'temp_processing\Eminem - Love The Way You Lie (Lyrics) ft. Rihanna.wav'.
+2024-12-22 17:16:30,383 - INFO - Starting chunk numbering from 1.
+2024-12-22 17:16:30,475 - INFO - Exported 'chunk1.wav'.
+2024-12-22 17:16:30,480 - INFO - Splitting completed successfully.
+2024-12-22 17:16:30,489 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 17:16:30,490 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 17:16:30,491 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-22 17:16:38,025 - INFO - Downloading model archive https://github.com/deezer/spleeter/releases/download/v1.4.0/2stems.tar.gz
+2024-12-22 17:16:59,543 - INFO - Validating archive checksum
+2024-12-22 17:17:01,215 - INFO - Extracting downloaded 2stems archive
+2024-12-22 17:17:01,631 - INFO - 2stems model file(s) extracted
+2024-12-22 17:17:10,785 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-22 17:17:10,971 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-22 17:17:11,002 - INFO - Extracted vocals saved to 'split_vocal\chunk1.wav'.
+2024-12-22 17:17:11,008 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-22 17:17:11,008 - INFO - Deleted empty directory 'split_vocal\chunk1'.
+2024-12-22 17:17:11,044 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-22 17:17:11,224 - INFO - Found 8 WAV file(s) in 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\final'. Starting feature extraction.
+2024-12-22 17:17:17,297 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-22 17:17:17,297 - INFO - Transformed data using the existing scaler.
+2024-12-22 17:17:17,313 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
+2024-12-22 17:19:28,773 - INFO - Starting download from YouTube URL: https://youtu.be/_LlyKiROzhU?si=NYeax_altsuaU8gE
+2024-12-22 17:20:02,645 - INFO - Downloaded audio from 'https://youtu.be/_LlyKiROzhU?si=NYeax_altsuaU8gE' to 'temp_processing\BOX SET: 6 Minute English - 'Human Emotions' English mega-class! One hour of new vocabulary!.mp3'.
+2024-12-22 17:20:02,645 - ERROR - Failed to convert 'temp_processing\BOX SET: 6 Minute English - 'Human Emotions' English mega-class! One hour of new vocabulary!.mp3' to WAV: [Errno 2] No such file or directory: "temp_processing\\BOX SET: 6 Minute English - 'Human Emotions' English mega-class! One hour of new vocabulary!.mp3"
+2024-12-22 17:20:02,645 - ERROR - An error occurred during processing: Failed to convert 'temp_processing\BOX SET: 6 Minute English - 'Human Emotions' English mega-class! One hour of new vocabulary!.mp3' to WAV: [Errno 2] No such file or directory: "temp_processing\\BOX SET: 6 Minute English - 'Human Emotions' English mega-class! One hour of new vocabulary!.mp3"
+2024-12-22 17:20:02,656 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 17:20:02,656 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 17:20:02,658 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-22 17:20:19,375 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-22 17:20:19,594 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-22 17:20:19,641 - INFO - Extracted vocals saved to 'split_vocal\chunk1.wav'.
+2024-12-22 17:20:19,641 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-22 17:20:19,641 - INFO - Deleted empty directory 'split_vocal\chunk1'.
+2024-12-22 17:20:19,673 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-22 17:20:19,877 - INFO - Found 16 WAV file(s) in 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\final'. Starting feature extraction.
+2024-12-22 17:20:32,115 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-22 17:20:32,130 - INFO - Transformed data using the existing scaler.
+2024-12-22 17:20:32,130 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
+2024-12-22 17:27:22,337 - INFO - Started recording audio from microphone.
+2024-12-22 17:27:34,922 - INFO - Stopped recording audio. Saved to 'temp_processing\recorded_audio.wav'.
+2024-12-22 17:27:35,925 - INFO - Starting chunk numbering from 1.
+2024-12-22 17:27:35,925 - INFO - Exported 'chunk1.wav'.
+2024-12-22 17:27:35,925 - INFO - Splitting completed successfully.
+2024-12-22 17:27:35,937 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 17:27:35,937 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 17:27:35,939 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-22 17:27:41,183 - INFO - Downloading model archive https://github.com/deezer/spleeter/releases/download/v1.4.0/2stems.tar.gz
+2024-12-22 17:28:00,945 - INFO - Validating archive checksum
+2024-12-22 17:28:02,572 - INFO - Extracting downloaded 2stems archive
+2024-12-22 17:28:03,004 - INFO - 2stems model file(s) extracted
+2024-12-22 17:28:04,220 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-22 17:28:04,231 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-22 17:28:04,231 - INFO - Extracted vocals saved to 'split_vocal\chunk1.wav'.
+2024-12-22 17:28:04,231 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-22 17:28:04,231 - INFO - Deleted empty directory 'split_vocal\chunk1'.
+2024-12-22 17:28:04,262 - ERROR - Error in processing: [WinError 6] The handle is invalid
+2024-12-22 17:31:52,494 - INFO - Started recording audio from microphone.
+2024-12-22 17:32:00,790 - INFO - Stopped recording audio. Saved to 'temp_processing\recorded_audio.wav'.
+2024-12-22 17:32:01,795 - INFO - Starting chunk numbering from 1.
+2024-12-22 17:32:01,802 - INFO - Exported 'chunk1.wav'.
+2024-12-22 17:32:01,802 - INFO - Splitting completed successfully.
+2024-12-22 17:32:01,806 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 17:32:01,806 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 17:44:07,735 - INFO - Started recording audio from microphone.
+2024-12-22 17:44:20,173 - INFO - Stopped recording audio. Saved to 'temp_processing\recorded_audio.wav'.
+2024-12-22 17:44:21,182 - INFO - Starting chunk numbering from 2.
+2024-12-22 17:44:21,182 - INFO - Exported 'chunk2.wav'.
+2024-12-22 17:44:21,182 - INFO - Splitting completed successfully.
+2024-12-22 17:44:21,195 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 17:44:21,195 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 18:04:54,371 - INFO - Started recording audio from microphone.
+2024-12-22 18:05:16,933 - INFO - Stopped recording audio. Saved to 'temp_processing\recorded_audio.wav'.
+2024-12-22 18:05:16,954 - ERROR - An error occurred during processing: 'temp_processing\\recorded_audio.wav' and 'temp_processing\\recorded_audio.wav' are the same file
+2024-12-22 18:05:16,954 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 18:05:16,954 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 18:07:04,164 - INFO - Started recording audio from microphone.
+2024-12-22 18:07:20,487 - INFO - Stopped recording audio. Saved to 'temp_processing\recorded_audio.wav'.
+2024-12-22 18:07:20,502 - ERROR - An error occurred during processing: 'temp_processing\\recorded_audio.wav' and 'temp_processing\\recorded_audio.wav' are the same file
+2024-12-22 18:07:20,507 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 18:07:20,507 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 18:09:05,472 - INFO - Started recording audio from microphone.
+2024-12-22 18:09:17,473 - INFO - Stopped recording audio. Saved to 'temp_processing\recorded_audio.wav'.
+2024-12-22 18:09:18,483 - INFO - Starting chunk numbering from 1.
+2024-12-22 18:09:18,483 - INFO - Exported 'chunk1.wav'.
+2024-12-22 18:09:18,483 - INFO - Splitting completed successfully.
+2024-12-22 18:09:18,496 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 18:09:18,496 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 18:20:30,849 - INFO - Started recording audio from microphone.
+2024-12-22 18:20:42,511 - INFO - Stopped recording audio. Saved to 'temp_processing\recorded_audio.wav'.
+2024-12-22 18:20:42,530 - INFO - Processed audio saved to 'processed_audio\recorded_audio.wav'.
+2024-12-22 18:20:42,531 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 18:20:42,531 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 19:45:29,306 - INFO - Starting download from YouTube URL: https://youtu.be/nULX5oKXPwE?si=n2pY6gFHFijZZVfa
+2024-12-22 19:45:34,868 - INFO - Downloaded audio from 'https://youtu.be/nULX5oKXPwE?si=n2pY6gFHFijZZVfa' to 'temp_processing\Operation Wild Scales.mp3'.
+2024-12-22 19:45:35,334 - INFO - Converted 'temp_processing\Operation Wild Scales.mp3' to 'temp_processing\Operation Wild Scales.wav'.
+2024-12-22 19:45:35,386 - INFO - Processed audio saved to 'processed_audio\Operation Wild Scales.wav'.
+2024-12-22 19:45:35,387 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 19:45:35,388 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 19:53:13,234 - INFO - Starting download from YouTube URL: https://youtu.be/nULX5oKXPwE?si=n2pY6gFHFijZZVfa
+2024-12-22 19:53:18,661 - INFO - Downloaded audio from 'https://youtu.be/nULX5oKXPwE?si=n2pY6gFHFijZZVfa' to 'temp_processing\Operation Wild Scales.mp3'.
+2024-12-22 19:53:19,126 - INFO - Converted 'temp_processing\Operation Wild Scales.mp3' to 'temp_processing\audio.wav'.
+2024-12-22 19:53:19,196 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
+2024-12-22 19:53:19,197 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 19:53:19,197 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 19:53:53,710 - INFO - Starting download from YouTube URL: https://youtu.be/umTWtLtMuJY?si=RB8qZKx0RwmrXtH1
+2024-12-22 19:54:02,970 - INFO - Downloaded audio from 'https://youtu.be/umTWtLtMuJY?si=RB8qZKx0RwmrXtH1' to 'temp_processing\T\u1ea1i sao Canada bên b\u1edd s\u1ee5p \u0111\u1ed5, qu\u1ed1c h\u1ed9i \u0111òi ph\u1ebf tru\u1ea5t c\u1ea3 th\u1ee7 t\u01b0\u1edbng?.mp3'.
+2024-12-22 19:54:02,972 - ERROR - Failed to convert 'temp_processing\T\u1ea1i sao Canada bên b\u1edd s\u1ee5p \u0111\u1ed5, qu\u1ed1c h\u1ed9i \u0111òi ph\u1ebf tru\u1ea5t c\u1ea3 th\u1ee7 t\u01b0\u1edbng?.mp3' to WAV: [Errno 22] Invalid argument: 'temp_processing\\T\u1ea1i sao Canada bên b\u1edd s\u1ee5p \u0111\u1ed5, qu\u1ed1c h\u1ed9i \u0111òi ph\u1ebf tru\u1ea5t c\u1ea3 th\u1ee7 t\u01b0\u1edbng?.mp3'
+2024-12-22 19:54:02,972 - ERROR - An error occurred during processing: Failed to convert 'temp_processing\T\u1ea1i sao Canada bên b\u1edd s\u1ee5p \u0111\u1ed5, qu\u1ed1c h\u1ed9i \u0111òi ph\u1ebf tru\u1ea5t c\u1ea3 th\u1ee7 t\u01b0\u1edbng?.mp3' to WAV: [Errno 22] Invalid argument: 'temp_processing\\T\u1ea1i sao Canada bên b\u1edd s\u1ee5p \u0111\u1ed5, qu\u1ed1c h\u1ed9i \u0111òi ph\u1ebf tru\u1ea5t c\u1ea3 th\u1ee7 t\u01b0\u1edbng?.mp3'
+2024-12-22 19:54:02,974 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 19:54:02,974 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 19:56:42,980 - INFO - Starting download from YouTube URL: https://youtu.be/umTWtLtMuJY?si=RB8qZKx0RwmrXtH1
+2024-12-22 19:56:47,614 - INFO - Downloaded and converted audio from 'https://youtu.be/umTWtLtMuJY?si=RB8qZKx0RwmrXtH1' to 'temp_processing\audio.wav'.
+2024-12-22 19:56:47,767 - INFO - Converted 'temp_processing\audio.wav' to 'temp_processing\audio.wav'.
+2024-12-22 19:56:47,904 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
+2024-12-22 19:56:47,904 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 19:56:47,904 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 20:09:46,086 - INFO - Starting download from YouTube URL: https://youtu.be/nULX5oKXPwE?si=ySyXbboPSH0gcJ3q
+2024-12-22 20:09:49,620 - INFO - Downloaded and converted audio from 'https://youtu.be/nULX5oKXPwE?si=ySyXbboPSH0gcJ3q' to 'temp_processing\audio.wav'.
+2024-12-22 20:09:49,688 - INFO - Converted 'temp_processing\audio.wav' to 'temp_processing\audio.wav'.
+2024-12-22 20:09:49,775 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
+2024-12-22 20:09:49,775 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 20:09:49,775 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 20:09:49,775 - INFO - Starting vocal extraction for 'processed_audio/audio.wav'.
+2024-12-22 20:10:05,382 - INFO - File extracted_vocal\audio/vocals.wav written succesfully
+2024-12-22 20:10:05,559 - INFO - File extracted_vocal\audio/accompaniment.wav written succesfully
+2024-12-22 20:10:05,617 - INFO - Extracted vocals saved to 'extracted_vocal\audio.wav'.
+2024-12-22 20:10:05,617 - INFO - Deleted accompaniment file 'extracted_vocal\audio\accompaniment.wav'.
+2024-12-22 20:10:05,617 - INFO - Deleted empty directory 'extracted_vocal\audio'.
+2024-12-22 20:10:05,648 - INFO - Vocal extraction completed. Extracted vocals saved as 'audio.wav' in 'extracted_vocal'.
+2024-12-22 20:10:05,648 - INFO - Starting feature extraction for 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\extracted_vocal\audio.wav'.
+2024-12-22 20:10:06,341 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-22 20:10:06,356 - INFO - Transformed data using the existing scaler.
+2024-12-22 20:10:06,356 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
+2024-12-22 20:26:06,324 - INFO - Input file is already in WAV format: 'C:\Users\phatt\Desktop\code\data_intro\data1\singing\vocal733.wav'.
+2024-12-22 20:26:06,344 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
+2024-12-22 20:26:06,345 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 20:26:06,345 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 20:26:06,346 - INFO - Starting vocal extraction for 'processed_audio/audio.wav'.
+2024-12-22 20:26:15,054 - INFO - File extracted_vocal\audio/vocals.wav written succesfully
+2024-12-22 20:26:15,075 - INFO - File extracted_vocal\audio/accompaniment.wav written succesfully
+2024-12-22 20:26:15,091 - INFO - Extracted vocals saved to 'extracted_vocal\audio.wav'.
+2024-12-22 20:26:15,092 - INFO - Deleted accompaniment file 'extracted_vocal\audio\accompaniment.wav'.
+2024-12-22 20:26:15,092 - INFO - Deleted empty directory 'extracted_vocal\audio'.
+2024-12-22 20:26:15,122 - INFO - Vocal extraction completed. Extracted vocals saved as 'audio.wav' in 'extracted_vocal'.
+2024-12-22 20:26:15,122 - INFO - Starting feature extraction for 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\extracted_vocal\audio.wav'.
+2024-12-22 20:26:15,914 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-22 20:26:15,914 - INFO - Transformed data using the existing scaler.
+2024-12-22 20:26:15,929 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
+2024-12-22 20:27:19,706 - INFO - Started recording audio from microphone.
+2024-12-22 20:29:43,257 - INFO - Stopped recording audio. Saved to 'temp_processing\audio.wav'.
+2024-12-22 20:29:43,312 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
+2024-12-22 20:29:43,313 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 20:29:43,313 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 20:29:43,314 - INFO - Starting vocal extraction for 'processed_audio/audio.wav'.
+2024-12-22 20:29:55,035 - INFO - File extracted_vocal\audio/vocals.wav written succesfully
+2024-12-22 20:29:55,115 - INFO - File extracted_vocal\audio/accompaniment.wav written succesfully
+2024-12-22 20:29:55,157 - INFO - Extracted vocals saved to 'extracted_vocal\audio.wav'.
+2024-12-22 20:29:55,160 - INFO - Deleted accompaniment file 'extracted_vocal\audio\accompaniment.wav'.
+2024-12-22 20:29:55,164 - INFO - Deleted empty directory 'extracted_vocal\audio'.
+2024-12-22 20:29:55,194 - INFO - Vocal extraction completed. Extracted vocals saved as 'audio.wav' in 'extracted_vocal'.
+2024-12-22 20:29:55,195 - INFO - Starting feature extraction for 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\extracted_vocal\audio.wav'.
+2024-12-22 20:29:55,874 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-22 20:29:55,889 - INFO - Transformed data using the existing scaler.
+2024-12-22 20:29:55,892 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
+2024-12-22 20:48:43,408 - INFO - Started recording audio from microphone.
+2024-12-22 20:48:54,638 - INFO - Stopped recording audio. Saved to 'temp_processing\audio.wav'.
+2024-12-22 20:48:54,653 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
+2024-12-22 20:48:54,653 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 20:48:54,663 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 20:48:54,664 - INFO - Starting vocal extraction for 'processed_audio/audio.wav'.
+2024-12-22 20:49:02,269 - INFO - File extracted_vocal\audio/vocals.wav written succesfully
+2024-12-22 20:49:02,278 - INFO - File extracted_vocal\audio/accompaniment.wav written succesfully
+2024-12-22 20:49:02,286 - INFO - Extracted vocals saved to 'extracted_vocal\audio.wav'.
+2024-12-22 20:49:02,286 - INFO - Deleted accompaniment file 'extracted_vocal\audio\accompaniment.wav'.
+2024-12-22 20:49:02,287 - INFO - Deleted empty directory 'extracted_vocal\audio'.
+2024-12-22 20:49:02,312 - INFO - Vocal extraction completed. Extracted vocals saved as 'audio.wav' in 'extracted_vocal'.
+2024-12-22 20:49:02,312 - INFO - Starting feature extraction for 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\extracted_vocal\audio.wav'.
+2024-12-22 20:49:02,517 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-22 20:49:02,524 - INFO - Transformed data using the existing scaler.
+2024-12-22 20:49:02,528 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.

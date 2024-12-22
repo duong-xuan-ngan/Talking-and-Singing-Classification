@@ -2,11 +2,9 @@ import os
 import pandas as pd
 import numpy as np
 import librosa
-from glob import glob
 import logging
 from sklearn.preprocessing import MinMaxScaler
 import json
-from tqdm import tqdm
 
 # Configure logging to capture all events and errors
 logging.basicConfig(
@@ -14,18 +12,6 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s:%(message)s'
 )
-
-def get_wav_duration(filepath):
-    """
-    Returns the duration of a WAV file in seconds.
-    """
-    try:
-        y, sr = librosa.load(filepath, sr=None)
-        duration = librosa.get_duration(y=y, sr=sr)
-        return duration
-    except Exception as e:
-        logging.error(f"Error reading {filepath}: {e}")
-        return None
 
 def extract_features(file_path, top_db=20):
     """
@@ -36,7 +22,7 @@ def extract_features(file_path, top_db=20):
     - top_db (int): The threshold (in decibels) below reference to consider as silence for trimming.
 
     Returns:
-    - features (dict): A dictionary of extracted features and the file name.
+    - features (dict): A dictionary of extracted features.
     """
     try:
         # Load the audio file with a duration of 30 seconds
@@ -87,9 +73,6 @@ def extract_features(file_path, top_db=20):
         features['spec_rolloff_mean'] = np.mean(spec_rolloff)
         features['spec_rolloff_std'] = np.std(spec_rolloff)
 
-        # Add file name as a separate feature
-        features['file_name'] = os.path.basename(file_path)
-
     except Exception as e:
         logging.error(f"Error processing {file_path}: {e}")
         return None
@@ -117,7 +100,6 @@ def save_scaler_parameters(scaler, file_path, feature_names):
         json.dump(scaler_params, f)
     logging.info(f"Scaler parameters saved to '{file_path}'.")
     print(f"Scaler parameters saved to '{file_path}'.")
-
 
 def load_scaler_parameters(file_path):
     """
@@ -148,51 +130,34 @@ def load_scaler_parameters(file_path):
         print(f"Error loading scaler parameters from '{file_path}': {e}")
         return None, None
 
-
-def process_final_folder(final_folder='final', output_csv='data.csv', scaler_json_path='minmax_scaler_params.json'):
+def process_audio_file(audio_file_path, output_csv='data.csv', scaler_json_path='minmax_scaler_params.json'):
     """
-    Processes each WAV file in the final folder to extract features and save them to a CSV file.
+    Processes a single WAV file to extract features and save them to a CSV file.
     Utilizes an existing MinMaxScaler if available, otherwise fits a new scaler and saves its parameters.
 
     Parameters:
-    - final_folder (str): Path to the 'final' directory containing WAV files.
+    - audio_file_path (str): Path to the WAV file.
     - output_csv (str): Path to the output CSV file.
     - scaler_json_path (str): Path to the MinMaxScaler JSON parameter file.
     """
-    # Verify that the final folder exists
-    if not os.path.isdir(final_folder):
-        logging.error(f"The directory '{final_folder}' does not exist.")
-        print(f"The directory '{final_folder}' does not exist. Exiting the script.")
+    # Check if the audio file exists
+    if not os.path.isfile(audio_file_path):
+        logging.error(f"The file '{audio_file_path}' does not exist.")
+        print(f"The file '{audio_file_path}' does not exist. Exiting the script.")
         return
 
-    # Find all WAV files in the final folder
-    wav_files = glob(os.path.join(final_folder, '*.wav'))
+    logging.info(f"Starting feature extraction for '{audio_file_path}'.")
+    print(f"Starting feature extraction for '{audio_file_path}'.")
 
-    if not wav_files:
-        logging.warning(f"No WAV files found in '{final_folder}'.")
-        print(f"No WAV files found in '{final_folder}'. Nothing to process.")
-        return
-
-    logging.info(f"Found {len(wav_files)} WAV file(s) in '{final_folder}'. Starting feature extraction.")
-    print(f"Found {len(wav_files)} WAV file(s) in '{final_folder}'. Starting feature extraction.")
-
-    features_list = []
-
-    # Iterate over each WAV file with a progress bar
-    for file in tqdm(wav_files, desc="Extracting Features", unit="file"):
-        features = extract_features(file)
-        if features:
-            features_list.append(features)
-        else:
-            logging.warning(f"Feature extraction failed for {file}")
-
-    if not features_list:
-        logging.error("Feature extraction failed for all files. Exiting the script.")
-        print("Feature extraction failed for all files. Please check the log for details.")
+    # Extract features
+    features = extract_features(audio_file_path)
+    if not features:
+        logging.error(f"Feature extraction failed for {audio_file_path}")
+        print(f"Feature extraction failed for {audio_file_path}. Please check the log for details.")
         return
 
     # Create a DataFrame from the features
-    df = pd.DataFrame(features_list)
+    df = pd.DataFrame([features])
 
     # Handle missing values if any
     if df.isnull().values.any():
@@ -200,10 +165,12 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_jso
         df.fillna(0, inplace=True)
         print("Missing values detected. Filled missing values with 0.")
 
-    # Separate features from file names
-    feature_columns = [col for col in df.columns if col != 'file_name']
-    X = df[feature_columns]
-    file_names = df['file_name']
+    # Remove 'file_name' if present
+    if 'file_name' in df.columns:
+        df.drop(columns=['file_name'], inplace=True)
+
+    # Get feature columns
+    feature_columns = list(df.columns)
 
     # Initialize or load the MinMaxScaler
     if os.path.exists(scaler_json_path):
@@ -211,9 +178,9 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_jso
         if scaler is None or saved_feature_names is None:
             print("Failed to load scaler parameters. Exiting the script.")
             return
-        # Reorder the columns to match the saved feature names
+        # Ensure the current features match the saved feature names
         try:
-            X = X[saved_feature_names]
+            X = df[saved_feature_names]
         except KeyError as e:
             logging.error(f"Feature columns mismatch: {e}")
             print(f"Feature columns mismatch: {e}. Exiting the script.")
@@ -235,6 +202,7 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_jso
         print("Initialized a new MinMaxScaler.")
 
         try:
+            X = df[feature_columns]
             X_scaled = scaler.fit_transform(X)
             logging.info("Fitted and transformed data using a new scaler.")
             print("Fitted and transformed data using a new scaler.")
@@ -247,11 +215,6 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_jso
 
     # Create a scaled DataFrame
     df_scaled = pd.DataFrame(X_scaled, columns=feature_columns)
-    df_scaled['file_name'] = file_names
-
-    # Reorder columns to have 'file_name' last
-    cols = [col for col in df_scaled.columns if col != 'file_name'] + ['file_name']
-    df_scaled = df_scaled[cols]
 
     # Save the scaled features to CSV
     try:
@@ -263,23 +226,23 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_jso
         print(f"Error saving scaled data to '{output_csv}': {e}. Exiting the script.")
         return
 
-
 def main():
     """
     Main function to execute the feature extraction process.
     """
-    # Define the path to the 'final' folder in the current directory
+    # Define the path to the 'extracted_vocal' folder and 'audio.wav'
     current_directory = os.getcwd()
-    final_folder = os.path.join(current_directory, 'final')
+    extracted_vocal_folder = os.path.join(current_directory, 'extracted_vocal')
+    audio_file = os.path.join(extracted_vocal_folder, 'audio.wav')
 
     # Define the output CSV path
     output_csv = os.path.join(current_directory, 'data.csv')
 
-    # Define the scaler JSON path (updated from .save to .json)
+    # Define the scaler JSON path
     scaler_json_path = os.path.join(current_directory, 'minmax_scaler_params.json')
 
     # Start processing
-    process_final_folder(final_folder=final_folder, output_csv=output_csv, scaler_json_path=scaler_json_path)
+    process_audio_file(audio_file_path=audio_file, output_csv=output_csv, scaler_json_path=scaler_json_path)
 
 if __name__ == "__main__":
     main()

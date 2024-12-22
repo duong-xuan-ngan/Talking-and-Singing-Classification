@@ -25,3 +25,8 @@
 2024-12-22 12:21:54,923 INFO:Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
 2024-12-22 12:21:54,923 INFO:Transformed data using the existing scaler.
 2024-12-22 12:21:54,923 INFO:Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
+2024-12-22 17:33:35,532 WARNING:No WAV files found in 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\final'.
+2024-12-22 20:06:07,950 INFO:Starting feature extraction for 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\extracted_vocal\audio.wav'.
+2024-12-22 20:06:08,710 INFO:Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-22 20:06:08,749 INFO:Transformed data using the existing scaler.
+2024-12-22 20:06:08,803 INFO:Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.

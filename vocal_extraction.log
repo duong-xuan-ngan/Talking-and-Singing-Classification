@@ -91,3 +91,25 @@
 2024-12-22 13:44:04,339 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
 2024-12-22 13:44:04,340 - INFO - Deleted empty directory 'split_vocal\chunk1'.
 2024-12-22 13:44:04,368 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-22 17:32:22,895 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-22 17:32:28,001 - INFO - Downloading model archive https://github.com/deezer/spleeter/releases/download/v1.4.0/2stems.tar.gz
+2024-12-22 17:32:48,030 - INFO - Validating archive checksum
+2024-12-22 17:32:49,659 - INFO - Extracting downloaded 2stems archive
+2024-12-22 17:32:50,097 - INFO - 2stems model file(s) extracted
+2024-12-22 17:32:50,980 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-22 17:32:50,980 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-22 17:32:50,986 - INFO - Extracted vocals saved to 'split_vocal\chunk1.wav'.
+2024-12-22 17:32:50,986 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-22 17:32:50,986 - INFO - Deleted empty directory 'split_vocal\chunk1'.
+2024-12-22 17:32:51,012 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-22 19:59:47,256 - INFO - Starting vocal extraction for 'processed_audio/audio.wav'.
+2024-12-22 19:59:57,306 - INFO - Downloading model archive https://github.com/deezer/spleeter/releases/download/v1.4.0/2stems.tar.gz
+2024-12-22 20:00:18,857 - INFO - Validating archive checksum
+2024-12-22 20:00:20,614 - INFO - Extracting downloaded 2stems archive
+2024-12-22 20:00:21,040 - INFO - 2stems model file(s) extracted
+2024-12-22 20:00:38,548 - INFO - File extracted_vocal\audio/vocals.wav written succesfully
+2024-12-22 20:00:38,548 - INFO - File extracted_vocal\audio/accompaniment.wav written succesfully
+2024-12-22 20:00:38,590 - INFO - Extracted vocals saved to 'extracted_vocal\audio.wav'.
+2024-12-22 20:00:38,598 - INFO - Deleted accompaniment file 'extracted_vocal\audio\accompaniment.wav'.
+2024-12-22 20:00:38,599 - INFO - Deleted empty directory 'extracted_vocal\audio'.
+2024-12-22 20:00:38,647 - INFO - Vocal extraction completed. Extracted vocals saved as 'audio.wav' in 'extracted_vocal'.
