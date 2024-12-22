@@ -1,21 +1,44 @@
 import os
-import subprocess
+import logging
+import warnings
 
-# Set the working directory to the location of data_process.py
+# Configure logging and suppress warnings
+logging.basicConfig(level=logging.INFO)
+warnings.filterwarnings('ignore')
+# Set the working directory and add ffmpeg to PATH
 script_dir = os.path.dirname(os.path.abspath(__file__))
+ffmpeg_path = os.path.join(script_dir, "ffmpeg", "bin")
+if os.path.exists(ffmpeg_path):
+    os.environ["PATH"] = ffmpeg_path + os.pathsep + os.environ.get("PATH", "")
 os.chdir(script_dir)
 
-scripts = ["split.py", "extract_vocal.py", "split_check.py", "csv_convert.py"]
-
-def run_script(script_name):
+def main():
     try:
-        print(f"Running {script_name}...")
-        subprocess.run(["python", script_name], check=True)
-        print(f"Finished {script_name}.")
-    except subprocess.CalledProcessError as e:
-        print(f"Error occurred while running {script_name}: {e}")
-        exit(1)
+        # Step 1: Run split.py
+        print("\nStep 1: Running audio splitting...")
+        from split import main as split_main
+        split_main()
 
-# Run each script in sequence
-for script in scripts:
-    run_script(script)
+        # Step 2: Run extract_vocal.py
+        print("\nStep 2: Running vocal extraction...")
+        from extract_vocal import main as extract_vocal_main
+        extract_vocal_main()
+
+        # Step 3: Run split_check.py
+        print("\nStep 3: Running split check...")
+        from split_check import main as split_check_main
+        split_check_main()
+
+        # Step 4: Run csv_convert.py
+        print("\nStep 4: Running feature extraction and CSV conversion...")
+        from csv_convert import main as csv_convert_main
+        csv_convert_main()
+
+        print("\nAll processing steps completed successfully!")
+
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        logging.error(f"Error in processing: {str(e)}")
+
+if __name__ == "__main__":
+    main()
