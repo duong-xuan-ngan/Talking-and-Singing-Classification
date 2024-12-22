@@ -69,20 +69,21 @@ def extract_features(file_path):
 
     return features
 
-# Function to save scaler parameters to a JSON file
-def save_scaler_parameters(scaler, file_path):
+# Function to save scaler parameters along with feature names to a JSON file
+def save_scaler_parameters(scaler, feature_names, file_path):
     scaler_params = {
         'data_min_': scaler.data_min_.tolist(),
         'data_max_': scaler.data_max_.tolist(),
         'data_range_': scaler.data_range_.tolist(),
         'scale_': scaler.scale_.tolist(),
-        'min_': scaler.min_.tolist()
+        'min_': scaler.min_.tolist(),
+        'feature_names': feature_names  # Include feature names
     }
     with open(file_path, 'w') as f:
-        json.dump(scaler_params, f)
-    logging.info(f"Scaler parameters saved to '{file_path}'.")
+        json.dump(scaler_params, f, indent=4)
+    logging.info(f"Scaler parameters and feature names saved to '{file_path}'.")
 
-# Function to load scaler parameters from a JSON file
+# Function to load scaler parameters along with feature names from a JSON file
 def load_scaler_parameters(file_path):
     with open(file_path, 'r') as f:
         loaded_params = json.load(f)
@@ -92,7 +93,8 @@ def load_scaler_parameters(file_path):
     scaler.data_range_ = np.array(loaded_params['data_range_'])
     scaler.scale_ = np.array(loaded_params['scale_'])
     scaler.min_ = np.array(loaded_params['min_'])
-    return scaler
+    feature_names = loaded_params['feature_names']
+    return scaler, feature_names
 
 def main():
     # Determine the script's directory
@@ -208,12 +210,6 @@ def main():
     X_train_scaled_df = pd.DataFrame(X_train_scaled, columns=X.columns)
     X_test_scaled_df = pd.DataFrame(X_test_scaled, columns=X.columns)
 
-    # Add 'file_name' column back to the scaled data (optional, based on your requirements)
-    # If you need to keep track of file names, ensure that 'file_name' was retained before dropping
-    # Otherwise, you can omit this step
-    # X_train_scaled_df['file_name'] = df.loc[X_train.index, 'file_name'].reset_index(drop=True)
-    # X_test_scaled_df['file_name'] = df.loc[X_test.index, 'file_name'].reset_index(drop=True)
-
     # Concatenate the labels back to the scaled features
     train_normalized_df = pd.concat([X_train_scaled_df, y_train.reset_index(drop=True)], axis=1)
     test_normalized_df = pd.concat([X_test_scaled_df, y_test.reset_index(drop=True)], axis=1)
@@ -222,10 +218,12 @@ def main():
     train_normalized_df.to_csv('train_features_scaled.csv', index=False)
     test_normalized_df.to_csv('test_features_scaled.csv', index=False)
 
-    # Save the scaler parameters to a JSON file
-    save_scaler_parameters(scaler, 'minmax_scaler_params.json')
+    # Save the scaler parameters and feature names to a JSON file
+    feature_names = X.columns.tolist()  # Extract feature names
+    save_scaler_parameters(scaler, feature_names, 'minmax_scaler_params.json')
 
     print("Completed!")
 
+# Entry point of the script
 if __name__ == "__main__":
     main()
