@@ -14,3 +14,8 @@
 2024-12-21 23:44:39,519 - INFO - Exported 'chunk1.wav'.
 2024-12-21 23:44:39,520 - INFO - Splitting completed successfully.
 2024-12-21 23:44:39,520 - INFO - All split audio files are saved in the 'split_audio' directory.
+2024-12-22 00:30:45,350 - INFO - Input file is already in WAV format: 'C:\Users\phatt\Desktop\code\data_intro\data1\singing\vocal38.wav'.
+2024-12-22 00:30:46,352 - INFO - Starting chunk numbering from 1.
+2024-12-22 00:30:46,363 - INFO - Exported 'chunk1.wav'.
+2024-12-22 00:30:46,364 - INFO - Splitting completed successfully.
+2024-12-22 00:30:46,364 - INFO - All split audio files are saved in the 'split_audio' directory.

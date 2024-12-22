@@ -62,3 +62,14 @@
 2024-12-22 00:01:03,719 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
 2024-12-22 00:01:03,724 - INFO - Deleted empty directory 'split_vocal\chunk1'.
 2024-12-22 00:01:03,725 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-22 00:31:14,957 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-22 00:31:16,081 - INFO - Downloading model archive https://github.com/deezer/spleeter/releases/download/v1.4.0/2stems.tar.gz
+2024-12-22 00:31:37,039 - INFO - Validating archive checksum
+2024-12-22 00:31:38,676 - INFO - Extracting downloaded 2stems archive
+2024-12-22 00:31:39,120 - INFO - 2stems model file(s) extracted
+2024-12-22 00:31:43,989 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-22 00:31:44,003 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-22 00:31:44,005 - INFO - Extracted vocals saved to 'split_vocal\chunk1.wav'.
+2024-12-22 00:31:44,006 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-22 00:31:44,006 - INFO - Deleted empty directory 'split_vocal\chunk1'.
+2024-12-22 00:31:44,008 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.

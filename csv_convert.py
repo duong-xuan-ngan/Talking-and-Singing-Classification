@@ -223,7 +223,7 @@ def main():
     output_csv = os.path.join(current_directory, 'data.csv')
 
     # Define the scaler save path
-    scaler_path = os.path.join(current_directory, 'minmax_scaler.save')
+    scaler_path = r'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler.save'
 
     # Start processing
     process_final_folder(final_folder=final_folder, output_csv=output_csv, scaler_path=scaler_path)
