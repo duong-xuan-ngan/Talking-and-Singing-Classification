@@ -73,3 +73,10 @@
 2024-12-22 00:31:44,006 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
 2024-12-22 00:31:44,006 - INFO - Deleted empty directory 'split_vocal\chunk1'.
 2024-12-22 00:31:44,008 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.
+2024-12-22 11:30:30,969 - INFO - Starting vocal extraction for 1 files with 4 workers.
+2024-12-22 11:30:41,175 - INFO - File split_vocal\chunk1/vocals.wav written succesfully
+2024-12-22 11:30:41,185 - INFO - File split_vocal\chunk1/accompaniment.wav written succesfully
+2024-12-22 11:30:41,194 - INFO - Extracted vocals saved to 'split_vocal\chunk1.wav'.
+2024-12-22 11:30:41,194 - INFO - Deleted accompaniment file 'split_vocal\chunk1\accompaniment.wav'.
+2024-12-22 11:30:41,195 - INFO - Deleted empty directory 'split_vocal\chunk1'.
+2024-12-22 11:30:41,197 - INFO - Vocal extraction completed for all files. Vocals saved in 'split_vocal'.

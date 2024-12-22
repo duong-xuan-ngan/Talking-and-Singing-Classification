@@ -5,7 +5,7 @@ import librosa
 from glob import glob
 import logging
 from sklearn.preprocessing import MinMaxScaler
-import joblib
+import json
 from tqdm import tqdm
 
 # Configure logging to capture all events and errors
@@ -96,15 +96,62 @@ def extract_features(file_path, top_db=20):
 
     return features
 
-def process_final_folder(final_folder='final', output_csv='data.csv', scaler_path='minmax_scaler.save'):
+def save_scaler_parameters(scaler, file_path):
+    """
+    Saves the MinMaxScaler parameters to a JSON file.
+
+    Parameters:
+    - scaler (MinMaxScaler): The fitted scaler.
+    - file_path (str): Path to the JSON file where parameters will be saved.
+    """
+    scaler_params = {
+        'data_min_': scaler.data_min_.tolist(),
+        'data_max_': scaler.data_max_.tolist(),
+        'data_range_': scaler.data_range_.tolist(),
+        'scale_': scaler.scale_.tolist(),
+        'min_': scaler.min_.tolist()
+    }
+    with open(file_path, 'w') as f:
+        json.dump(scaler_params, f)
+    logging.info(f"Scaler parameters saved to '{file_path}'.")
+    print(f"Scaler parameters saved to '{file_path}'.")
+
+def load_scaler_parameters(file_path):
+    """
+    Loads the MinMaxScaler parameters from a JSON file and reconstructs the scaler.
+
+    Parameters:
+    - file_path (str): Path to the JSON file containing scaler parameters.
+
+    Returns:
+    - scaler (MinMaxScaler): Reconstructed scaler with loaded parameters.
+    """
+    try:
+        with open(file_path, 'r') as f:
+            loaded_params = json.load(f)
+        scaler = MinMaxScaler()
+        scaler.data_min_ = np.array(loaded_params['data_min_'])
+        scaler.data_max_ = np.array(loaded_params['data_max_'])
+        scaler.data_range_ = np.array(loaded_params['data_range_'])
+        scaler.scale_ = np.array(loaded_params['scale_'])
+        scaler.min_ = np.array(loaded_params['min_'])
+        logging.info(f"Scaler parameters loaded from '{file_path}'.")
+        print(f"Scaler parameters loaded from '{file_path}'.")
+        return scaler
+    except Exception as e:
+        logging.error(f"Error loading scaler parameters from '{file_path}': {e}")
+        print(f"Error loading scaler parameters from '{file_path}': {e}")
+        return None
+
+def process_final_folder(final_folder='final', output_csv='data.csv', scaler_json_path='minmax_scaler_params.json'):
     """
     Processes each WAV file in the final folder to extract features and save them to a CSV file.
-    Utilizes an existing MinMaxScaler if available.
+    Utilizes an existing MinMaxScaler if available, otherwise fits a new scaler and saves its parameters.
 
     Parameters:
     - final_folder (str): Path to the 'final' directory containing WAV files.
     - output_csv (str): Path to the output CSV file.
-    - scaler_path (str): Path to the MinMaxScaler save file.
+    - scaler_json_path (str): Path to the MinMaxScaler JSON parameter file.
     """
     # Verify that the final folder exists
     if not os.path.isdir(final_folder):
@@ -153,14 +200,10 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_pat
     file_names = df['file_name']
 
     # Initialize or load the MinMaxScaler
-    if os.path.exists(scaler_path):
-        try:
-            scaler = joblib.load(scaler_path)
-            logging.info(f"Loaded existing scaler from '{scaler_path}'.")
-            print(f"Loaded existing scaler from '{scaler_path}'.")
-        except Exception as e:
-            logging.error(f"Error loading scaler from '{scaler_path}': {e}")
-            print(f"Error loading scaler from '{scaler_path}'. Exiting the script.")
+    if os.path.exists(scaler_json_path):
+        scaler = load_scaler_parameters(scaler_json_path)
+        if scaler is None:
+            print("Failed to load scaler parameters. Exiting the script.")
             return
     else:
         scaler = MinMaxScaler()
@@ -168,7 +211,7 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_pat
         print("Initialized a new MinMaxScaler.")
 
     # Scale the features
-    if os.path.exists(scaler_path):
+    if os.path.exists(scaler_json_path):
         # If scaler exists, only transform the data
         try:
             X_scaled = scaler.transform(X)
@@ -184,10 +227,8 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_pat
             X_scaled = scaler.fit_transform(X)
             logging.info("Fitted and transformed data using a new scaler.")
             print("Fitted and transformed data using a new scaler.")
-            # Save the newly fitted scaler
-            joblib.dump(scaler, scaler_path)
-            logging.info(f"Saved the new scaler to '{scaler_path}'.")
-            print(f"Saved the new scaler to '{scaler_path}'.")
+            # Save the newly fitted scaler parameters to JSON
+            save_scaler_parameters(scaler, scaler_json_path)
         except Exception as e:
             logging.error(f"Error fitting and transforming data: {e}")
             print(f"Error fitting and transforming data: {e}. Exiting the script.")
@@ -222,11 +263,11 @@ def main():
     # Define the output CSV path
     output_csv = os.path.join(current_directory, 'data.csv')
 
-    # Define the scaler save path
-    scaler_path = r'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler.save'
+    # Define the scaler JSON path (updated from .save to .json)
+    scaler_json_path = os.path.join(current_directory, 'minmax_scaler_params.json')
 
     # Start processing
-    process_final_folder(final_folder=final_folder, output_csv=output_csv, scaler_path=scaler_path)
+    process_final_folder(final_folder=final_folder, output_csv=output_csv, scaler_json_path=scaler_json_path)
 
 if __name__ == "__main__":
     main()

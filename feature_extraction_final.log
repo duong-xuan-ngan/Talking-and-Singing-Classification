@@ -9,3 +9,7 @@
 2024-12-22 00:29:50,310 ERROR:The directory 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\final' does not exist.
 2024-12-22 00:34:19,853 INFO:Found 1 WAV file(s) in 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\final'. Starting feature extraction.
 2024-12-22 00:34:21,757 ERROR:Error loading scaler from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler.save': No module named 'numpy._core'
+2024-12-22 11:31:39,866 INFO:Found 2 WAV file(s) in 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\final'. Starting feature extraction.
+2024-12-22 11:31:43,292 INFO:Scaler parameters loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-22 11:31:43,311 INFO:Transformed data using the existing scaler.
+2024-12-22 11:31:43,323 INFO:Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
