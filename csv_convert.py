@@ -96,15 +96,17 @@ def extract_features(file_path, top_db=20):
 
     return features
 
-def save_scaler_parameters(scaler, file_path):
+def save_scaler_parameters(scaler, file_path, feature_names):
     """
-    Saves the MinMaxScaler parameters to a JSON file.
+    Saves the MinMaxScaler parameters and feature names to a JSON file.
 
     Parameters:
     - scaler (MinMaxScaler): The fitted scaler.
     - file_path (str): Path to the JSON file where parameters will be saved.
+    - feature_names (list): List of feature names used in scaling.
     """
     scaler_params = {
+        'feature_names': feature_names,
         'data_min_': scaler.data_min_.tolist(),
         'data_max_': scaler.data_max_.tolist(),
         'data_range_': scaler.data_range_.tolist(),
@@ -116,15 +118,17 @@ def save_scaler_parameters(scaler, file_path):
     logging.info(f"Scaler parameters saved to '{file_path}'.")
     print(f"Scaler parameters saved to '{file_path}'.")
 
+
 def load_scaler_parameters(file_path):
     """
-    Loads the MinMaxScaler parameters from a JSON file and reconstructs the scaler.
+    Loads the MinMaxScaler parameters and feature names from a JSON file.
 
     Parameters:
     - file_path (str): Path to the JSON file containing scaler parameters.
 
     Returns:
     - scaler (MinMaxScaler): Reconstructed scaler with loaded parameters.
+    - feature_names (list): List of feature names used in the scaler.
     """
     try:
         with open(file_path, 'r') as f:
@@ -135,13 +139,15 @@ def load_scaler_parameters(file_path):
         scaler.data_range_ = np.array(loaded_params['data_range_'])
         scaler.scale_ = np.array(loaded_params['scale_'])
         scaler.min_ = np.array(loaded_params['min_'])
-        logging.info(f"Scaler parameters loaded from '{file_path}'.")
-        print(f"Scaler parameters loaded from '{file_path}'.")
-        return scaler
+        feature_names = loaded_params['feature_names']
+        logging.info(f"Scaler parameters and feature names loaded from '{file_path}'.")
+        print(f"Scaler parameters and feature names loaded from '{file_path}'.")
+        return scaler, feature_names
     except Exception as e:
         logging.error(f"Error loading scaler parameters from '{file_path}': {e}")
         print(f"Error loading scaler parameters from '{file_path}': {e}")
-        return None
+        return None, None
+
 
 def process_final_folder(final_folder='final', output_csv='data.csv', scaler_json_path='minmax_scaler_params.json'):
     """
@@ -201,18 +207,19 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_jso
 
     # Initialize or load the MinMaxScaler
     if os.path.exists(scaler_json_path):
-        scaler = load_scaler_parameters(scaler_json_path)
-        if scaler is None:
+        scaler, saved_feature_names = load_scaler_parameters(scaler_json_path)
+        if scaler is None or saved_feature_names is None:
             print("Failed to load scaler parameters. Exiting the script.")
             return
-    else:
-        scaler = MinMaxScaler()
-        logging.info("Initialized a new MinMaxScaler.")
-        print("Initialized a new MinMaxScaler.")
+        # Reorder the columns to match the saved feature names
+        try:
+            X = X[saved_feature_names]
+        except KeyError as e:
+            logging.error(f"Feature columns mismatch: {e}")
+            print(f"Feature columns mismatch: {e}. Exiting the script.")
+            return
 
-    # Scale the features
-    if os.path.exists(scaler_json_path):
-        # If scaler exists, only transform the data
+        # Transform the data
         try:
             X_scaled = scaler.transform(X)
             logging.info("Transformed data using the existing scaler.")
@@ -222,13 +229,17 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_jso
             print(f"Error transforming data with the existing scaler: {e}. Exiting the script.")
             return
     else:
-        # If scaler does not exist, fit and transform the data, then save the scaler
+        # Initialize a new scaler and fit-transform the data
+        scaler = MinMaxScaler()
+        logging.info("Initialized a new MinMaxScaler.")
+        print("Initialized a new MinMaxScaler.")
+
         try:
             X_scaled = scaler.fit_transform(X)
             logging.info("Fitted and transformed data using a new scaler.")
             print("Fitted and transformed data using a new scaler.")
-            # Save the newly fitted scaler parameters to JSON
-            save_scaler_parameters(scaler, scaler_json_path)
+            # Save the scaler parameters with feature names
+            save_scaler_parameters(scaler, scaler_json_path, feature_columns)
         except Exception as e:
             logging.error(f"Error fitting and transforming data: {e}")
             print(f"Error fitting and transforming data: {e}. Exiting the script.")
@@ -251,6 +262,7 @@ def process_final_folder(final_folder='final', output_csv='data.csv', scaler_jso
         logging.error(f"Error saving scaled data to '{output_csv}': {e}")
         print(f"Error saving scaled data to '{output_csv}': {e}. Exiting the script.")
         return
+
 
 def main():
     """
