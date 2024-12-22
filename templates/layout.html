@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Audio Classification</h1>
+        <div class="card">
+            <form id="prediction-form">
+                <div class="form-group">
+                    <label for="audio_url">Enter Audio URL:</label>
+                    <input type="url" id="audio_url" name="audio_url" required>
+                </div>
+                <button type="submit">Predict</button>
+            </form>
+            <div id="result" class="result-container"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const result = document.getElementById('result');
+            result.innerHTML = 'Processing...';
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: new FormData(e.target)
+                });
+                const data = await response.json();
+                if (data.status === 'success') {
+                    result.innerHTML = `Prediction: ${data.prediction}`;
+                } else {
+                    result.innerHTML = `Error: ${data.message}`;
+                }
+            } catch (error) {
+                result.innerHTML = 'Error occurred during prediction';
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,9 +1,0 @@
-# Exclude all .wav files in data/singing and data/talking
-data/singing/*.wav
-data/talking/*.wav
-
-# Alternatively, exclude all .wav files within data/
-data/**/*.wav
-
-# You can also exclude the entire data directory if needed
-# data/
