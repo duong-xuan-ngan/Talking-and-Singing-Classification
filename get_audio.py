@@ -373,3 +373,63 @@ def main():
 # Entry point of the script
 if __name__ == "__main__":
     main()
+
+import os
+import yt_dlp
+import shutil
+import logging
+from pydub import AudioSegment
+
+logging.basicConfig(level=logging.INFO)
+
+def process_youtube_video(youtube_url, output_dir):
+    """Downloads and processes a YouTube video's audio."""
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, 'audio.wav')
+
+    try:
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'wav',
+            }],
+            'outtmpl': output_path.replace('.wav', '.%(ext)s'),
+            'quiet': True,
+            'no_warnings': True
+        }
+
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([youtube_url])
+
+        # Verify file exists
+        if not os.path.exists(output_path):
+            raise FileNotFoundError(f"Failed to download audio to {output_path}")
+
+        return output_path
+
+    except Exception as e:
+        logging.error(f"Error downloading video: {str(e)}")
+        raise
+
+def clean_up(temp_dir):
+    """
+    Removes temporary processing directory.
+    """
+    if os.path.exists(temp_dir):
+        try:
+            shutil.rmtree(temp_dir)
+            logging.info(f"Cleaned up temporary files in {temp_dir}")
+        except Exception as e:
+            logging.error(f"Error cleaning up {temp_dir}: {str(e)}")
+
+if __name__ == "__main__":
+    # Test the functions
+    url = input("Enter YouTube URL: ")
+    try:
+        output = process_youtube_video(url, 'processed_audio')
+        print(f"Audio downloaded and processed: {output}")
+    except Exception as e:
+        print(f"Error: {str(e)}")
+    finally:
+        clean_up('temp_processing')
