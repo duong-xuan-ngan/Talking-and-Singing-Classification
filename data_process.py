@@ -1,9 +1,11 @@
 import os
 import logging
 import warnings
-from get_audio import main as get_audio_main
+from get_audio import process_youtube_video, clean_up
 from extract_vocal import main as extract_vocal_main
-from csv_convert import main as csv_convert_main
+from csv_convert import process_audio_file
+import shutil
+import time  # Add this import
 
 # Configure logging and suppress warnings
 logging.basicConfig(level=logging.INFO)
@@ -17,23 +19,64 @@ os.chdir(script_dir)
 
 def main():
     try:
-        # Step 1: Run split.py
-        print("\nStep 1: Get the audio...")
-        get_audio_main()
+        input_type = os.environ.get('AUDIO_INPUT_TYPE')
+        input_value = os.environ.get('AUDIO_INPUT_VALUE')
+        
+        if not input_type or not input_value:
+            raise ValueError("Missing input type or value")
 
-        # Step 2: Run extract_vocal.py
-        print("\nStep 2: Running vocal extraction...")
+        # Create all necessary directories
+        directories = ['processed_audio', 'extracted_vocal', 'temp_processing']
+        for dir_name in directories:
+            os.makedirs(dir_name, exist_ok=True)
+        
+        time.sleep(1)  # Wait for directories to be created
+
+        processed_audio_path = os.path.join('processed_audio', 'audio.wav')
+
+        if input_type == 'record':
+            # Add extra handling for recorded audio
+            time.sleep(1)  # Wait before copying
+            shutil.copy2(input_value, processed_audio_path)
+            time.sleep(2)  # Wait after copying
+            
+            if not os.path.exists(processed_audio_path):
+                raise FileNotFoundError(f"Failed to copy recorded audio to {processed_audio_path}")
+        
+        elif input_type == 'url':
+            # Process YouTube URL and ensure the file is created
+            process_youtube_video(input_value, 'processed_audio')
+            if not os.path.exists(processed_audio_path):
+                raise FileNotFoundError(f"Failed to create audio file at {processed_audio_path}")
+
+        # Verify file exists before proceeding
+        if not os.path.exists(processed_audio_path):
+            raise FileNotFoundError(f"Audio file not found at {processed_audio_path}")
+
+        time.sleep(2)  # Wait before vocal extraction
+        # Extract vocals
         extract_vocal_main()
+        time.sleep(2)  # Wait after vocal extraction
 
-        # Step 3: Run csv_convert.py
-        print("\nStep 3: Running feature extraction and CSV conversion...")
-        csv_convert_main()
+        # Process the extracted vocal for prediction
+        vocal_path = os.path.join('extracted_vocal', 'audio.wav')
+        if not os.path.exists(vocal_path):
+            raise FileNotFoundError("Vocal extraction failed")
 
-        print("\nAll processing steps completed successfully!")
+        time.sleep(1)  # Wait before CSV conversion
+        # Convert to features and save as CSV
+        process_audio_file(vocal_path, output_csv='testing.csv')
+        time.sleep(1)  # Wait after CSV conversion
 
     except Exception as e:
-        print(f"An error occurred: {str(e)}")
-        logging.error(f"Error in processing: {str(e)}")
+        logging.error(f"Error in data processing: {str(e)}")
+        raise
+    finally:
+        # Clean up temporary files
+        time.sleep(1)  # Wait before cleanup
+        for temp_dir in ['temp_processing']:
+            if os.path.exists(temp_dir):
+                shutil.rmtree(temp_dir)
 
 if __name__ == "__main__":
     main()

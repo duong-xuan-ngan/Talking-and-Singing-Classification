@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Audio Classification</h1>
+        <div class="card">
+            <div class="input-selector">
+                <button class="tab-btn active" data-tab="url">YouTube URL</button>
+                <button class="tab-btn" data-tab="record">Record Voice</button>
+            </div>
+
+            <div id="url-input" class="input-section active">
+                <form id="url-form" class="input-form">
+                    <div class="form-group">
+                        <label for="audio_url">Enter YouTube URL:</label>
+                        <input type="url" id="audio_url" name="audio_url" required>
+                    </div>
+                    <button type="submit">Predict</button>
+                </form>
+            </div>
+
+            <div id="record-input" class="input-section">
+                <div id="record-controls">
+                    <button id="startRecord" class="record-btn">Start Recording</button>
+                    <button id="stopRecord" class="record-btn" disabled>Stop Recording</button>
+                    <div id="timer" class="timer">00:00</div>
+                </div>
+                <div id="audio-player" style="display: none;">
+                    <audio id="recordedAudio" controls></audio>
+                    <button id="submitRecording" class="submit-btn">Submit Recording</button>
+                </div>
+            </div>
+
+            <div id="result" class="result-container"></div>
+            <div id="loading" class="loading-spinner" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.input-section').forEach(section => section.classList.remove('active'));
+                button.classList.add('active');
+                document.getElementById(`${button.dataset.tab}-input`).classList.add('active');
+            });
+        });
+
+        // URL form submission
+        document.getElementById('url-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const result = document.getElementById('result');
+            const loading = document.getElementById('loading');
+            
+            loading.style.display = 'block';
+            result.innerHTML = '';
+            
+            try {
+                const formData = new FormData();
+                formData.append('input_type', 'url');
+                formData.append('audio_url', document.getElementById('audio_url').value);
+                
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    result.innerHTML = `
+                        <div class="prediction-result">
+                            <h3>Prediction: ${data.prediction}</h3>
+                            <p>Confidence: ${data.confidence}</p>
+                        </div>`;
+                } else {
+                    result.innerHTML = `<div class="error">Error: ${data.message}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = '<div class="error">Error occurred during prediction</div>';
+            } finally {
+                loading.style.display = 'none';
+            }
+        };
+
+        // Recording logic
+        let mediaRecorder;
+        let audioChunks = [];
+        let startTime;
+        let timerInterval;
+
+        const startRecord = document.getElementById('startRecord');
+        const stopRecord = document.getElementById('stopRecord');
+        const submitRecording = document.getElementById('submitRecording');
+        const timer = document.getElementById('timer');
+        const audioPlayer = document.getElementById('audio-player');
+        const recordedAudio = document.getElementById('recordedAudio');
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            timer.textContent = `${minutes}:${seconds}`;
+        }
+
+        startRecord.onclick = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    recordedAudio.src = URL.createObjectURL(audioBlob);
+                    audioPlayer.style.display = 'block';
+                };
+
+                mediaRecorder.start();
+                startTime = Date.now();
+                timerInterval = setInterval(updateTimer, 1000);
+                startRecord.disabled = true;
+                stopRecord.disabled = false;
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                alert('Error accessing microphone. Please ensure microphone permissions are granted.');
+            }
+        };
+
+        stopRecord.onclick = () => {
+            mediaRecorder.stop();
+            clearInterval(timerInterval);
+            startRecord.disabled = false;
+            stopRecord.disabled = true;
+        };
+
+        submitRecording.onclick = async () => {
+            const result = document.getElementById('result');
+            const loading = document.getElementById('loading');
+            
+            loading.style.display = 'block';
+            result.innerHTML = '';
+            
+            try {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const formData = new FormData();
+                formData.append('input_type', 'record');
+                formData.append('audio_data', audioBlob, 'recording.wav');
+                
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    result.innerHTML = `
+                        <div class="prediction-result">
+                            <h3>Prediction: ${data.prediction}</h3>
+                            <p>Confidence: ${data.confidence}</p>
+                        </div>`;
+                } else {
+                    result.innerHTML = `<div class="error">Error: ${data.message}</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = '<div class="error">Error occurred during prediction</div>';
+            } finally {
+                loading.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>

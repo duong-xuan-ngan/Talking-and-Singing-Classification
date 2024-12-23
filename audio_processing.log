@@ -297,3 +297,41 @@
 2024-12-22 20:49:02,517 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
 2024-12-22 20:49:02,524 - INFO - Transformed data using the existing scaler.
 2024-12-22 20:49:02,528 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
+2024-12-22 23:06:08,598 - INFO - Starting download from YouTube URL: https://youtu.be/gUr4qp6YGLs?si=AltiddIEQrQbbQwd
+2024-12-22 23:06:18,000 - INFO - Downloaded and converted audio from 'https://youtu.be/gUr4qp6YGLs?si=AltiddIEQrQbbQwd' to 'temp_processing\audio.wav'.
+2024-12-22 23:06:18,101 - INFO - Converted 'temp_processing\audio.wav' to 'temp_processing\audio.wav'.
+2024-12-22 23:06:18,167 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
+2024-12-22 23:06:18,168 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 23:06:18,168 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 23:06:18,171 - INFO - Starting vocal extraction for 'processed_audio/audio.wav'.
+2024-12-22 23:06:29,799 - INFO - Downloading model archive https://github.com/deezer/spleeter/releases/download/v1.4.0/2stems.tar.gz
+2024-12-22 23:07:29,288 - INFO - Validating archive checksum
+2024-12-22 23:07:31,281 - INFO - Extracting downloaded 2stems archive
+2024-12-22 23:07:31,736 - INFO - 2stems model file(s) extracted
+2024-12-22 23:07:42,931 - INFO - File extracted_vocal\audio/vocals.wav written succesfully
+2024-12-22 23:07:43,060 - INFO - File extracted_vocal\audio/accompaniment.wav written succesfully
+2024-12-22 23:07:43,077 - INFO - Extracted vocals saved to 'extracted_vocal\audio.wav'.
+2024-12-22 23:07:43,081 - INFO - Deleted accompaniment file 'extracted_vocal\audio\accompaniment.wav'.
+2024-12-22 23:07:43,082 - INFO - Deleted empty directory 'extracted_vocal\audio'.
+2024-12-22 23:07:43,134 - INFO - Vocal extraction completed. Extracted vocals saved as 'audio.wav' in 'extracted_vocal'.
+2024-12-22 23:07:43,135 - INFO - Starting feature extraction for 'D:\ai_project\audio_classification\model_building\extracted_vocal\audio.wav'.
+2024-12-22 23:07:43,730 - INFO - Scaler parameters and feature names loaded from 'D:\ai_project\audio_classification\model_building\minmax_scaler_params.json'.
+2024-12-22 23:07:43,738 - INFO - Transformed data using the existing scaler.
+2024-12-22 23:07:43,743 - INFO - Feature extraction complete. Data saved to 'D:\ai_project\audio_classification\model_building\data.csv'.
+2024-12-22 23:20:40,059 - INFO - Starting download from YouTube URL: https://youtu.be/gUr4qp6YGLs?si=7n7-LBTL42LiO3lh
+2024-12-22 23:20:43,735 - INFO - Downloaded and converted audio from 'https://youtu.be/gUr4qp6YGLs?si=7n7-LBTL42LiO3lh' to 'temp_processing\audio.wav'.
+2024-12-22 23:20:43,838 - INFO - Converted 'temp_processing\audio.wav' to 'temp_processing\audio.wav'.
+2024-12-22 23:20:43,876 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
+2024-12-22 23:20:43,876 - INFO - Cleaned up temporary files in 'temp_processing'.
+2024-12-22 23:20:43,877 - INFO - All processed audio files are saved in the 'processed_audio' directory.
+2024-12-22 23:20:43,879 - INFO - Starting vocal extraction for 'processed_audio/audio.wav'.
+2024-12-22 23:21:02,455 - INFO - File extracted_vocal\audio/vocals.wav written succesfully
+2024-12-22 23:21:02,561 - INFO - File extracted_vocal\audio/accompaniment.wav written succesfully
+2024-12-22 23:21:02,608 - INFO - Extracted vocals saved to 'extracted_vocal\audio.wav'.
+2024-12-22 23:21:02,612 - INFO - Deleted accompaniment file 'extracted_vocal\audio\accompaniment.wav'.
+2024-12-22 23:21:02,613 - INFO - Deleted empty directory 'extracted_vocal\audio'.
+2024-12-22 23:21:02,657 - INFO - Vocal extraction completed. Extracted vocals saved as 'audio.wav' in 'extracted_vocal'.
+2024-12-22 23:21:02,659 - INFO - Starting feature extraction for 'D:\ai_project\audio_classification\model_building\extracted_vocal\audio.wav'.
+2024-12-22 23:21:03,149 - INFO - Scaler parameters and feature names loaded from 'D:\ai_project\audio_classification\model_building\minmax_scaler_params.json'.
+2024-12-22 23:21:03,155 - INFO - Transformed data using the existing scaler.
+2024-12-22 23:21:03,158 - INFO - Feature extraction complete. Data saved to 'D:\ai_project\audio_classification\model_building\data.csv'.

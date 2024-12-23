@@ -121,34 +121,33 @@ def parse_arguments():
     return parser.parse_args()
 
 def main():
-    args = parse_arguments()
-
-    input_wav = args.input_file
-    output_dir = args.output_dir
-    output_filename = os.path.basename(input_wav)  # Keeps the original filename
-
-    # Check if the input file exists
-    if not os.path.exists(input_wav):
-        print(f"The input file '{input_wav}' does not exist. Please check the path.")
-        logging.error(f"The input file '{input_wav}' does not exist.")
-        return
-
-    print(f"Starting vocal extraction for '{input_wav}'...")
-    logging.info(f"Starting vocal extraction for '{input_wav}'.")
-
     try:
-        extract_vocals(input_wav, output_dir, output_filename)
+        # Initialize the separator
+        separator = Separator('spleeter:2stems')
+        
+        # Input and output paths
+        input_path = os.path.join('processed_audio', 'audio.wav')
+        output_dir = 'temp_separation'
+        final_dir = 'extracted_vocal'
+        
+        # Create output directories
+        os.makedirs(output_dir, exist_ok=True)
+        os.makedirs(final_dir, exist_ok=True)
+        
+        # Separate vocals
+        separator.separate_to_file(input_path, output_dir)
+        
+        # Move the vocals to final directory
+        vocals_path = os.path.join(output_dir, 'audio', 'vocals.wav')
+        final_path = os.path.join(final_dir, 'audio.wav')
+        shutil.move(vocals_path, final_path)
+        
+        # Clean up
+        shutil.rmtree(output_dir, ignore_errors=True)
+        
     except Exception as e:
-        print(f"An error occurred during vocal extraction: {e}")
-        logging.error(f"An error occurred during vocal extraction: {e}")
-        return
-
-    # Optional: Clean up temporary preprocessing directory if specified
-    if args.cleanup:
-        clean_up(args.cleanup)
-
-    print(f"\nVocal extraction completed. Extracted vocals are saved as '{output_filename}' in the '{output_dir}' directory.")
-    logging.info(f"Vocal extraction completed. Extracted vocals saved as '{output_filename}' in '{output_dir}'.")
+        print(f"Error in vocal extraction: {str(e)}")
+        raise e
 
 if __name__ == "__main__":
     main()
