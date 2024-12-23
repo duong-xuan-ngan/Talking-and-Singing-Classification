@@ -334,29 +334,12 @@ def main():
     print("Audio Processing Script")
     print("-----------------------")
     print("Choose the type of input:")
-    print("1. Local Audio File")
-    print("2. YouTube URL")
-    print("3. Record Audio from Microphone")
+    print("1. YouTube URL")
+    print("2. Record Audio from Microphone")
 
-    choice = input("Enter 1, 2, or 3: ").strip()
+    choice = input("Enter 1 or 2: ").strip()
 
     if choice == '1':
-        input_type = 'file'
-        input_audio = input("Enter the path to the audio file: ").strip()
-
-        # Validate the input
-        if not input_audio:
-            print("No audio file path was entered. Exiting the program.")
-            logging.warning("No audio file path was entered. Exiting the program.")
-            return
-
-        if not os.path.isfile(input_audio):
-            error_msg = f"The file '{input_audio}' does not exist. Please provide a valid file path."
-            print(error_msg)
-            logging.error(error_msg)
-            return
-
-    elif choice == '2':
         input_type = 'youtube'
         input_audio = input("Enter the YouTube video URL: ").strip()
 
@@ -372,7 +355,7 @@ def main():
             print(error_msg)
             logging.error(error_msg)
             return
-    elif choice == '3':
+    elif choice == '2':
         input_type = 'record'
         input_audio = None  # Not needed for recording
         print("You will now record audio. Minimum duration is 10 seconds and maximum is 10 minutes.")
