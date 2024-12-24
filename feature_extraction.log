@@ -95,3 +95,19 @@
 2024-12-24 17:21:47,551 INFO:Loaded scaler parameters from 'minmax_scaler_params.json'.
 2024-12-24 17:21:47,556 INFO:Data scaled using the loaded MinMaxScaler.
 2024-12-24 17:21:47,683 INFO:Scaled data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'.
+2024-12-24 20:13:45,392 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-24 20:13:45,392 ERROR:Singing directory does not exist: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data\singing
+2024-12-24 20:13:45,392 ERROR:Talking directory does not exist: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data\talking
+2024-12-24 20:13:45,392 INFO:Found 0 singing files and 0 talking files.
+2024-12-24 20:13:45,408 INFO:Total files to process: 0
+2024-12-24 20:13:45,408 ERROR:No audio files found. Exiting the script.
+2024-12-24 20:16:12,326 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-24 20:16:12,326 INFO:Found 1000 singing files and 1001 talking files.
+2024-12-24 20:16:12,326 INFO:Total files to process: 2001
+2024-12-24 20:19:10,408 INFO:Successfully extracted features for 2001 files.
+2024-12-24 20:19:10,564 INFO:Feature extraction complete. Data saved to 'features.csv'
+2024-12-24 20:19:10,645 INFO:Training set size: 1600 samples
+2024-12-24 20:19:10,645 INFO:Testing set size: 401 samples
+2024-12-24 20:19:10,664 INFO:Loaded scaler parameters from 'minmax_scaler_params.json'.
+2024-12-24 20:19:10,682 INFO:Data scaled using the loaded MinMaxScaler.
+2024-12-24 20:19:10,819 INFO:Scaled data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'.

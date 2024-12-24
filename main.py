@@ -185,13 +185,16 @@ def main():
         logging.warning("Missing values detected in 'features.csv'. Filling missing values with 0.")
         df.fillna(0, inplace=True)
 
+    # **New Step:** Preserve 'file_name' before dropping
+    file_names = df['file_name']
+
     # Separate features and labels
     X = df.drop(['label', 'file_name'], axis=1)  # Drop 'file_name' along with 'label'
     y = df['label']
 
-    # Split into training and testing sets (e.g., 80% train, 20% test)
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
+    # **New Step:** Split 'file_name' alongside features and labels
+    X_train, X_test, y_train, y_test, train_file_names, test_file_names = train_test_split(
+        X, y, file_names, test_size=0.2, random_state=42, stratify=y
     )
 
     logging.info(f"Training set size: {X_train.shape[0]} samples")
@@ -244,18 +247,6 @@ def main():
         X_train_scaled = scaler.fit_transform(X_train)
         X_test_scaled = scaler.transform(X_test)
 
-        # Convert scaled data back to DataFrames
-        X_train_scaled_df = pd.DataFrame(X_train_scaled, columns=X.columns)
-        X_test_scaled_df = pd.DataFrame(X_test_scaled, columns=X.columns)
-
-        # Concatenate the labels back to the scaled features
-        train_normalized_df = pd.concat([X_train_scaled_df, y_train.reset_index(drop=True)], axis=1)
-        test_normalized_df = pd.concat([X_test_scaled_df, y_test.reset_index(drop=True)], axis=1)
-
-        # Save the scaled data to CSV files
-        train_normalized_df.to_csv('train_features_scaled.csv', index=False)
-        test_normalized_df.to_csv('test_features_scaled.csv', index=False)
-
         # Save the scaler parameters and feature names to a JSON file
         feature_names = X.columns.tolist()  # Extract feature names
         save_scaler_parameters(scaler, feature_names, scaler_params_path)
@@ -263,16 +254,37 @@ def main():
         logging.info("Scaler fitted and parameters saved.")
         print("Scaler fitted and parameters saved.")
 
-        return  # Exit after fitting and saving the scaler
-
-    # If scaler was loaded, proceed to save the scaled data
+    # If scaler was loaded or newly fitted, proceed to save the scaled data
     # Convert scaled data back to DataFrames
     X_train_scaled_df = pd.DataFrame(X_train_scaled, columns=X.columns)
     X_test_scaled_df = pd.DataFrame(X_test_scaled, columns=X.columns)
 
-    # Concatenate the labels back to the scaled features
-    train_normalized_df = pd.concat([X_train_scaled_df, y_train.reset_index(drop=True)], axis=1)
-    test_normalized_df = pd.concat([X_test_scaled_df, y_test.reset_index(drop=True)], axis=1)
+    # **New Step:** Add 'file_name' back to the scaled DataFrames
+    X_train_scaled_df = X_train_scaled_df.reset_index(drop=True)
+    X_test_scaled_df = X_test_scaled_df.reset_index(drop=True)
+    train_file_names = train_file_names.reset_index(drop=True)
+    test_file_names = test_file_names.reset_index(drop=True)
+
+    # Concatenate the labels and 'file_name' back to the scaled features
+    train_normalized_df = pd.concat([X_train_scaled_df, y_train.reset_index(drop=True), train_file_names], axis=1)
+    test_normalized_df = pd.concat([X_test_scaled_df, y_test.reset_index(drop=True), test_file_names], axis=1)
+
+    # **New Step:** Reorder columns to have 'file_name' at the end
+    # Get list of columns
+    train_columns = list(train_normalized_df.columns)
+    test_columns = list(test_normalized_df.columns)
+
+    # Remove 'file_name' from its current position
+    train_columns.remove('file_name')
+    test_columns.remove('file_name')
+
+    # Append 'file_name' to the end
+    train_columns.append('file_name')
+    test_columns.append('file_name')
+
+    # Reorder the DataFrames
+    train_normalized_df = train_normalized_df[train_columns]
+    test_normalized_df = test_normalized_df[test_columns]
 
     # Save the scaled data to CSV files
     train_normalized_df.to_csv('train_features_scaled.csv', index=False)
