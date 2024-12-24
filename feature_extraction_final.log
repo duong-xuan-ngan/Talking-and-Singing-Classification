@@ -1,0 +1,31 @@
+2024-12-24 16:40:47,051 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-24 16:40:47,051 ERROR:Singing directory does not exist: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data\singing
+2024-12-24 16:40:47,051 ERROR:Talking directory does not exist: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data\talking
+2024-12-24 16:40:47,051 INFO:Found 0 singing files and 0 talking files.
+2024-12-24 16:40:47,051 INFO:Total files to process: 0
+2024-12-24 16:40:47,051 ERROR:No audio files found. Exiting the script.
+2024-12-24 16:48:46,086 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-24 16:48:46,086 INFO:Found 2000 singing files and 2002 talking files.
+2024-12-24 16:48:46,086 INFO:Total files to process: 4002
+2024-12-24 16:48:46,086 INFO:Starting feature extraction in parallel.
+2024-12-24 16:51:28,001 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-24 16:51:28,001 INFO:Found 1000 singing files and 1001 talking files.
+2024-12-24 16:51:28,001 INFO:Total files to process: 2001
+2024-12-24 16:51:28,001 INFO:Starting feature extraction in parallel.
+2024-12-24 16:54:00,186 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-24 16:54:00,202 INFO:Found 1000 singing files and 1001 talking files.
+2024-12-24 16:54:00,202 INFO:Total files to process: 2001
+2024-12-24 16:54:00,202 INFO:Starting feature extraction in parallel.
+2024-12-24 17:00:51,153 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-24 17:00:51,161 INFO:Found 1000 singing files and 1001 talking files.
+2024-12-24 17:00:51,161 INFO:Total files to process: 2001
+2024-12-24 17:00:51,161 INFO:Starting feature extraction in parallel.
+2024-12-24 17:03:53,526 INFO:Successfully extracted features for 2001 files.
+2024-12-24 17:03:53,675 INFO:Feature extraction complete. Data saved to 'features.csv'
+2024-12-24 17:03:53,734 INFO:Training set size: 1600 samples
+2024-12-24 17:03:53,734 INFO:Testing set size: 401 samples
+2024-12-24 17:03:53,736 INFO:Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
+2024-12-24 17:03:53,758 INFO:Data scaled using the loaded scaler.
+2024-12-24 17:03:53,885 INFO:Scaled training data saved to 'train_features_scaled.csv'.
+2024-12-24 17:03:53,885 INFO:Scaled testing data saved to 'test_features_scaled.csv'.
+2024-12-24 17:03:53,901 INFO:Feature extraction and scaling complete.
