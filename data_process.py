@@ -1,7 +1,7 @@
 import os
 import logging
 import warnings
-from get_audio import process_youtube_video, clean_up
+from get_audio import process_youtube_video, clean_up, record_audio_threaded  # Add record_audio_threaded
 from extract_vocal import main as extract_vocal_main
 from csv_convert import process_audio_file
 import shutil
@@ -35,14 +35,9 @@ def main():
         processed_audio_path = os.path.join('processed_audio', 'audio.wav')
 
         if input_type == 'record':
-            # Add extra handling for recorded audio
-            time.sleep(1)  # Wait before copying
+            # The audio file should already be in WAV format from record_audio_threaded
             shutil.copy2(input_value, processed_audio_path)
-            time.sleep(2)  # Wait after copying
             
-            if not os.path.exists(processed_audio_path):
-                raise FileNotFoundError(f"Failed to copy recorded audio to {processed_audio_path}")
-        
         elif input_type == 'url':
             # Process YouTube URL and ensure the file is created
             process_youtube_video(input_value, 'processed_audio')

@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 import os
-import wave
-import pandas as pd
 import logging
 import requests
+import pandas as pd
+import time
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
@@ -14,28 +14,17 @@ app = Flask(__name__)
 PREDICTION_API_URL = 'http://localhost:5001/predict'  # URL of the Prediction API
 TEMP_DIR = 'temp_processing'
 
-def save_recorded_audio(audio_data):
-    """Save recorded audio data to a temporary WAV file."""
+def save_audio_blob(audio_data):
+    """Save the recorded audio blob to a WAV file."""
     os.makedirs(TEMP_DIR, exist_ok=True)
-    temp_path = os.path.join(TEMP_DIR, 'recorded_audio.wav')
+    temp_path = os.path.join(TEMP_DIR, 'audio.wav')
     
     try:
-        with wave.open(temp_path, 'wb') as wf:
-            wf.setnchannels(1)  # Mono
-            wf.setsampwidth(2)  # 2 bytes per sample
-            wf.setframerate(44100)  # Standard sampling rate
-            wf.writeframes(audio_data)
-        
-        # Add sleep to ensure file is written completely
-        import time
-        time.sleep(2)
-        
-        if not os.path.exists(temp_path):
-            raise FileNotFoundError("Failed to save recorded audio")
-            
+        with open(temp_path, 'wb') as f:
+            f.write(audio_data)
         return temp_path
     except Exception as e:
-        logging.error(f"Error saving recorded audio: {str(e)}")
+        logging.error(f"Error saving audio blob: {str(e)}")
         raise
 
 @app.route('/')
@@ -56,30 +45,25 @@ def predict():
             os.environ['AUDIO_INPUT_VALUE'] = audio_url
             
         elif input_type == 'record':
-            # Handle recorded audio input
+            # Handle the recorded audio blob
             if 'audio_data' not in request.files:
-                return jsonify({'status': 'error', 'message': 'No audio file provided'}), 400
+                return jsonify({'status': 'error', 'message': 'No audio data provided'}), 400
             
             audio_file = request.files['audio_data']
-            temp_path = save_recorded_audio(audio_file.read())
-            
-            # Add sleep to ensure file is accessible
-            import time
-            time.sleep(2)
-            
-            os.environ['AUDIO_INPUT_TYPE'] = 'record'
-            os.environ['AUDIO_INPUT_VALUE'] = temp_path
+            try:
+                temp_path = save_audio_blob(audio_file.read())
+                os.environ['AUDIO_INPUT_TYPE'] = 'record'
+                os.environ['AUDIO_INPUT_VALUE'] = temp_path
+            except Exception as e:
+                return jsonify({'status': 'error', 'message': f'Error saving audio: {str(e)}'}), 500
             
         else:
             return jsonify({'status': 'error', 'message': 'Invalid input type'}), 400
 
         # Process the audio data
         try:
-            import time
             from data_process import main as process_main
-            time.sleep(1)  # Wait before processing
             process_main()
-            time.sleep(2)  # Wait after processing
         except Exception as e:
             logging.error(f"Error in data processing: {str(e)}")
             return jsonify({'status': 'error', 'message': f'Data processing error: {str(e)}'}), 500
