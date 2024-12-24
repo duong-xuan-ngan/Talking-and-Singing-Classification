@@ -73,3 +73,25 @@
 2024-12-22 12:01:58,845 INFO:Training set size: 1601 samples
 2024-12-22 12:01:58,845 INFO:Testing set size: 401 samples
 2024-12-22 12:01:58,975 INFO:Scaler parameters and feature names saved to 'minmax_scaler_params.json'.
+2024-12-24 16:59:45,860 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-24 16:59:45,860 INFO:Found 1000 singing files and 1001 talking files.
+2024-12-24 16:59:45,860 INFO:Total files to process: 2001
+2024-12-24 17:08:24,305 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-24 17:08:24,305 INFO:Found 1000 singing files and 1001 talking files.
+2024-12-24 17:08:24,305 INFO:Total files to process: 2001
+2024-12-24 17:11:16,349 INFO:Successfully extracted features for 2001 files.
+2024-12-24 17:11:16,493 INFO:Feature extraction complete. Data saved to 'features.csv'
+2024-12-24 17:11:16,538 INFO:Training set size: 1600 samples
+2024-12-24 17:11:16,538 INFO:Testing set size: 401 samples
+2024-12-24 17:11:16,538 INFO:Scaler parameters and feature names loaded from 'minmax_scaler_params.json'.
+2024-12-24 17:11:16,676 INFO:Scaled training and testing data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'
+2024-12-24 17:18:56,330 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-24 17:18:56,341 INFO:Found 1000 singing files and 1001 talking files.
+2024-12-24 17:18:56,341 INFO:Total files to process: 2001
+2024-12-24 17:21:47,366 INFO:Successfully extracted features for 2001 files.
+2024-12-24 17:21:47,508 INFO:Feature extraction complete. Data saved to 'features.csv'
+2024-12-24 17:21:47,550 INFO:Training set size: 1600 samples
+2024-12-24 17:21:47,550 INFO:Testing set size: 401 samples
+2024-12-24 17:21:47,551 INFO:Loaded scaler parameters from 'minmax_scaler_params.json'.
+2024-12-24 17:21:47,556 INFO:Data scaled using the loaded MinMaxScaler.
+2024-12-24 17:21:47,683 INFO:Scaled data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'.

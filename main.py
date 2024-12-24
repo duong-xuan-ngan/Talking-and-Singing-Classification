@@ -199,13 +199,73 @@ def main():
     print(f"Training set size: {X_train.shape[0]} samples")
     print(f"Testing set size: {X_test.shape[0]} samples")
 
-    # Initialize the MinMaxScaler
-    scaler = MinMaxScaler()
+    # Path to the scaler parameters JSON file
+    scaler_params_path = 'minmax_scaler_params.json'
 
-    # Fit the scaler on the training data and transform both training and testing data
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
+    # Check if the scaler parameters file exists
+    if os.path.exists(scaler_params_path):
+        # Load the scaler from the JSON file
+        try:
+            scaler, feature_names = load_scaler_parameters(scaler_params_path)
+            logging.info(f"Loaded scaler parameters from '{scaler_params_path}'.")
+            print(f"Loaded scaler parameters from '{scaler_params_path}'.")
+        except Exception as e:
+            logging.error(f"Failed to load scaler parameters: {e}")
+            print(f"Failed to load scaler parameters: {e}")
+            return
 
+        # Ensure that the feature names match
+        current_feature_names = X.columns.tolist()
+        if feature_names != current_feature_names:
+            logging.error("Feature names in the scaler parameters do not match the current data.")
+            print("Feature names in the scaler parameters do not match the current data.")
+            return
+
+        # Transform the data using the loaded scaler
+        try:
+            X_train_scaled = scaler.transform(X_train)
+            X_test_scaled = scaler.transform(X_test)
+            logging.info("Data scaled using the loaded MinMaxScaler.")
+            print("Data scaled using the loaded MinMaxScaler.")
+        except Exception as e:
+            logging.error(f"Error during scaling: {e}")
+            print(f"Error during scaling: {e}")
+            return
+
+    else:
+        # If the scaler parameters file does not exist, fit a new scaler and save it
+        logging.info(f"Scaler parameters file '{scaler_params_path}' not found. Fitting a new scaler.")
+        print(f"Scaler parameters file '{scaler_params_path}' not found. Fitting a new scaler.")
+
+        # Initialize the MinMaxScaler
+        scaler = MinMaxScaler()
+
+        # Fit the scaler on the training data and transform both training and testing data
+        X_train_scaled = scaler.fit_transform(X_train)
+        X_test_scaled = scaler.transform(X_test)
+
+        # Convert scaled data back to DataFrames
+        X_train_scaled_df = pd.DataFrame(X_train_scaled, columns=X.columns)
+        X_test_scaled_df = pd.DataFrame(X_test_scaled, columns=X.columns)
+
+        # Concatenate the labels back to the scaled features
+        train_normalized_df = pd.concat([X_train_scaled_df, y_train.reset_index(drop=True)], axis=1)
+        test_normalized_df = pd.concat([X_test_scaled_df, y_test.reset_index(drop=True)], axis=1)
+
+        # Save the scaled data to CSV files
+        train_normalized_df.to_csv('train_features_scaled.csv', index=False)
+        test_normalized_df.to_csv('test_features_scaled.csv', index=False)
+
+        # Save the scaler parameters and feature names to a JSON file
+        feature_names = X.columns.tolist()  # Extract feature names
+        save_scaler_parameters(scaler, feature_names, scaler_params_path)
+
+        logging.info("Scaler fitted and parameters saved.")
+        print("Scaler fitted and parameters saved.")
+
+        return  # Exit after fitting and saving the scaler
+
+    # If scaler was loaded, proceed to save the scaled data
     # Convert scaled data back to DataFrames
     X_train_scaled_df = pd.DataFrame(X_train_scaled, columns=X.columns)
     X_test_scaled_df = pd.DataFrame(X_test_scaled, columns=X.columns)
@@ -218,9 +278,8 @@ def main():
     train_normalized_df.to_csv('train_features_scaled.csv', index=False)
     test_normalized_df.to_csv('test_features_scaled.csv', index=False)
 
-    # Save the scaler parameters and feature names to a JSON file
-    feature_names = X.columns.tolist()  # Extract feature names
-    save_scaler_parameters(scaler, feature_names, 'minmax_scaler_params.json')
+    logging.info("Scaled data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'.")
+    print("Scaled data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'.")
 
     print("Completed!")
 
