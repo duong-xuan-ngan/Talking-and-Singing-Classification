@@ -297,19 +297,3 @@
 2024-12-22 20:49:02,517 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
 2024-12-22 20:49:02,524 - INFO - Transformed data using the existing scaler.
 2024-12-22 20:49:02,528 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
-2024-12-23 20:01:20,478 - INFO - Started recording audio from microphone.
-2024-12-23 20:01:40,969 - INFO - Stopped recording audio. Saved to 'temp_processing\audio.wav'.
-2024-12-23 20:01:40,984 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
-2024-12-23 20:01:40,984 - INFO - Cleaned up temporary files in 'temp_processing'.
-2024-12-23 20:01:40,984 - INFO - All processed audio files are saved in the 'processed_audio' directory.
-2024-12-23 20:08:24,039 - INFO - Started recording audio from microphone.
-2024-12-23 20:08:38,752 - INFO - Stopped recording audio. Saved to 'temp_processing\audio.wav'.
-2024-12-23 20:08:38,767 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
-2024-12-23 20:08:38,767 - INFO - Cleaned up temporary files in 'temp_processing'.
-2024-12-23 20:08:38,767 - INFO - All processed audio files are saved in the 'processed_audio' directory.
-2024-12-23 20:09:13,553 - INFO - Starting download from YouTube URL: https://youtu.be/nULX5oKXPwE?si=s45AzDUoHtIryEkX
-2024-12-23 20:09:18,094 - INFO - Downloaded and converted audio from 'https://youtu.be/nULX5oKXPwE?si=s45AzDUoHtIryEkX' to 'temp_processing\audio.wav'.
-2024-12-23 20:09:18,164 - INFO - Converted 'temp_processing\audio.wav' to 'temp_processing\audio.wav'.
-2024-12-23 20:09:18,239 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
-2024-12-23 20:09:18,239 - INFO - Cleaned up temporary files in 'temp_processing'.
-2024-12-23 20:09:18,239 - INFO - All processed audio files are saved in the 'processed_audio' directory.

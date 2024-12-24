@@ -89,11 +89,12 @@
             }
         };
 
-        // Recording logic
+        // Recording logic with duration checks
         let mediaRecorder;
         let audioChunks = [];
         let startTime;
         let timerInterval;
+        let recordingDuration = 0;
 
         const startRecord = document.getElementById('startRecord');
         const stopRecord = document.getElementById('stopRecord');
@@ -101,12 +102,19 @@
         const timer = document.getElementById('timer');
         const audioPlayer = document.getElementById('audio-player');
         const recordedAudio = document.getElementById('recordedAudio');
+        const MIN_DURATION = 10; // Minimum recording duration in seconds
 
         function updateTimer() {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
-            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            recordingDuration = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(recordingDuration / 60).toString().padStart(2, '0');
+            const seconds = (recordingDuration % 60).toString().padStart(2, '0');
             timer.textContent = `${minutes}:${seconds}`;
+
+            // Enable stop button only after minimum duration
+            if (recordingDuration >= MIN_DURATION && stopRecord.disabled) {
+                stopRecord.disabled = false;
+                timer.style.color = 'green';
+            }
         }
 
         startRecord.onclick = async () => {
@@ -114,22 +122,35 @@
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
                 audioChunks = [];
+                recordingDuration = 0;
+                timer.style.color = 'red';
+                timer.textContent = '00:00';
 
                 mediaRecorder.ondataavailable = (event) => {
                     audioChunks.push(event.data);
                 };
 
                 mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                    recordedAudio.src = URL.createObjectURL(audioBlob);
-                    audioPlayer.style.display = 'block';
+                    if (recordingDuration >= MIN_DURATION) {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        recordedAudio.src = URL.createObjectURL(audioBlob);
+                        audioPlayer.style.display = 'block';
+                        submitRecording.disabled = false;
+                    } else {
+                        alert(`Recording must be at least ${MIN_DURATION} seconds long.`);
+                        audioPlayer.style.display = 'none';
+                        submitRecording.disabled = true;
+                    }
                 };
 
-                mediaRecorder.start();
+                mediaRecorder.start(1000); // Collect data every second
                 startTime = Date.now();
                 timerInterval = setInterval(updateTimer, 1000);
                 startRecord.disabled = true;
-                stopRecord.disabled = false;
+                stopRecord.disabled = true; // Initially disabled
+                submitRecording.disabled = true;
+                audioPlayer.style.display = 'none';
+
             } catch (error) {
                 console.error('Error accessing microphone:', error);
                 alert('Error accessing microphone. Please ensure microphone permissions are granted.');
@@ -137,6 +158,10 @@
         };
 
         stopRecord.onclick = () => {
+            if (recordingDuration < MIN_DURATION) {
+                alert(`Recording must be at least ${MIN_DURATION} seconds long.`);
+                return;
+            }
             mediaRecorder.stop();
             clearInterval(timerInterval);
             startRecord.disabled = false;
@@ -144,6 +169,11 @@
         };
 
         submitRecording.onclick = async () => {
+            if (recordingDuration < MIN_DURATION) {
+                alert(`Recording must be at least ${MIN_DURATION} seconds long.`);
+                return;
+            }
+
             const result = document.getElementById('result');
             const loading = document.getElementById('loading');
             
@@ -151,6 +181,7 @@
             result.innerHTML = '';
             
             try {
+                // Create WAV blob with proper format
                 const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
                 const formData = new FormData();
                 formData.append('input_type', 'record');
@@ -173,9 +204,16 @@
                 }
             } catch (error) {
                 result.innerHTML = '<div class="error">Error occurred during prediction</div>';
+                console.error('Error:', error);
             } finally {
                 loading.style.display = 'none';
             }
+
+            // Reset recording interface
+            audioChunks = [];
+            audioPlayer.style.display = 'none';
+            submitRecording.disabled = true;
+            timer.textContent = '00:00';
         };
     </script>
 </body>
