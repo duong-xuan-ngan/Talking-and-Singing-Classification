@@ -113,3 +113,5 @@
 2024-12-22 20:00:38,598 - INFO - Deleted accompaniment file 'extracted_vocal\audio\accompaniment.wav'.
 2024-12-22 20:00:38,599 - INFO - Deleted empty directory 'extracted_vocal\audio'.
 2024-12-22 20:00:38,647 - INFO - Vocal extraction completed. Extracted vocals saved as 'audio.wav' in 'extracted_vocal'.
+2024-12-23 20:14:09,236 - INFO - File temp_separation\audio/vocals.wav written succesfully
+2024-12-23 20:14:09,403 - INFO - File temp_separation\audio/accompaniment.wav written succesfully

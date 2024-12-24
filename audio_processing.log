@@ -297,29 +297,3 @@
 2024-12-22 20:49:02,517 - INFO - Scaler parameters and feature names loaded from 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\minmax_scaler_params.json'.
 2024-12-22 20:49:02,524 - INFO - Transformed data using the existing scaler.
 2024-12-22 20:49:02,528 - INFO - Feature extraction complete. Data saved to 'C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data.csv'.
-2024-12-24 10:25:16,144 - INFO - Started recording audio from microphone.
-2024-12-24 10:25:31,396 - INFO - Stopped recording audio. Saved to 'temp_processing\audio.wav'.
-2024-12-24 10:25:31,430 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
-2024-12-24 10:25:31,430 - INFO - Cleaned up temporary files in 'temp_processing'.
-2024-12-24 10:25:31,430 - INFO - All processed audio files are saved in the 'processed_audio' directory.
-2024-12-24 10:39:33,749 - INFO - Started recording audio from microphone.
-2024-12-24 10:39:46,426 - INFO - Stopped recording audio. Saved to 'temp_processing\audio.wav'.
-2024-12-24 10:39:46,454 - INFO - Processed audio saved to 'processed_audio\audio.wav'.
-2024-12-24 10:39:46,456 - INFO - Cleaned up temporary files in 'temp_processing'.
-2024-12-24 10:39:46,456 - INFO - All processed audio files are saved in the 'processed_audio' directory.
-2024-12-24 10:53:04,318 - INFO -  * Restarting with stat
-2024-12-24 10:53:04,952 - WARNING -  * Debugger is active!
-2024-12-24 10:53:04,955 - INFO -  * Debugger PIN: 100-877-628
-2024-12-24 10:53:04,978 - INFO -  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-2024-12-24 10:53:21,950 - INFO - 127.0.0.1 - - [24/Dec/2024 10:53:21] "GET / HTTP/1.1" 200 -
-2024-12-24 10:53:22,000 - INFO - 127.0.0.1 - - [24/Dec/2024 10:53:22] "[36mGET /static/styles.css HTTP/1.1[0m" 304 -
-2024-12-24 10:53:42,994 - INFO - Started recording audio from microphone.
-2024-12-24 10:54:25,569 - INFO - Stopped recording audio. Saved to 'temp_processing\audio.wav'.
-2024-12-24 10:54:40,290 - INFO - File temp_separation\audio/vocals.wav written succesfully
-2024-12-24 10:54:40,290 - INFO - File temp_separation\audio/accompaniment.wav written succesfully
-2024-12-24 10:54:43,349 - INFO - Starting feature extraction for 'extracted_vocal\audio.wav'.
-2024-12-24 10:54:43,947 - INFO - Scaler parameters and feature names loaded from 'minmax_scaler_params.json'.
-2024-12-24 10:54:43,950 - INFO - Transformed data using the existing scaler.
-2024-12-24 10:54:43,954 - INFO - Feature extraction complete. Data saved to 'testing.csv'.
-2024-12-24 10:54:47,981 - ERROR - Error in prediction request: name 'pd' is not defined
-2024-12-24 10:54:47,982 - INFO - 127.0.0.1 - - [24/Dec/2024 10:54:47] "[35m[1mPOST /predict HTTP/1.1[0m" 500 -
