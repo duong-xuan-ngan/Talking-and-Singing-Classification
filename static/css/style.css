@@ -9,30 +9,34 @@
 
 body {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgb(2, 2, 107)
-}
-
-::selection {
-    color: #fff;
-    background: #53f0e3;
+    background: linear-gradient(135deg, #f6d365, #fda085);
+    position: relative; /* Allows positioning the image on the right */
 }
 
 .wrapper {
     width: 380px;
     padding: 40px 30px 50px 30px;
     background: #fff;
-    border-radius: 5px;
+    border-radius: 10px;
     text-align: center;
-    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .wrapper header {
-    font-size: 35px;
+    font-size: 32px;
     font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
 }
 
 .wrapper form {
@@ -41,106 +45,34 @@ body {
 
 form .field {
     width: 100%;
-    margin-bottom: 20px;
-}
-
-form .field.shake {
-    animation: shake 0.3s ease-in-out;
-}
-
-@keyframes shake {
-    0%, 100% { margin-left: 0px; }
-    20%, 80% { margin-left: -12px; }
-    40%, 60% { margin-left: 12px; }
-}
-
-form .field .input-area {
-    height: 50px;
-    width: 100%;
+    margin-bottom: 25px;
     position: relative;
 }
 
 form input {
     width: 100%;
-    height: 100%;
-    outline: none;
     padding: 0 45px;
-    font-size: 18px;
-    background: none;
+    height: 50px;
+    outline: none;
+    font-size: 16px;
+    background: #f9f9f9;
     caret-color: #5372F0;
-    border-radius: 5px;
-    border: 1px solid #bfbfbf;
-    border-bottom-width: 2px;
-    transition: all 0.2s ease;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: border 0.3s ease, background 0.3s ease;
 }
 
-form .field input:focus,
-form .field.valid input {
+form input:focus {
     border-color: #5372F0;
-}
-
-form .field.shake input,
-form .field.error input {
-    border-color: #dc3545;
-}
-
-.field .input-area i {
-    position: absolute;
-    top: 50%;
-    font-size: 18px;
-    pointer-events: none;
-    transform: translateY(-50%);
-}
-
-.input-area .icon {
-    left: 15px;
-    color: #bfbfbf;
-    transition: color 0.2s ease;
-}
-
-.input-area .error-icon {
-    right: 15px;
-    color: #dc3545;
-}
-
-form input:focus~.icon,
-form .field.valid .icon {
-    color: #5372F0;
-}
-
-form .field.shake input:focus~.icon,
-form .field.error input:focus~.icon {
-    color: #bfbfbf;
-}
-
-form input::placeholder {
-    color: #bfbfbf;
-    font-size: 17px;
-}
-
-form .field .error-txt {
-    color: #dc3545;
-    text-align: left;
-    margin-top: 5px;
-}
-
-form .field .error {
-    display: none;
-}
-
-form .field.shake .error,
-form .field.error .error {
-    display: block;
-}
-
-form .pass-txt {
-    text-align: left;
-    margin-top: -10px;
+    background: #fff;
 }
 
 .wrapper a {
-    color: #5372F0;
+    color: #010101;
     text-decoration: none;
+    font-weight: 500;
+    margin-top: 10px;
+    display: inline-block;
 }
 
 .wrapper a:hover {
@@ -148,17 +80,29 @@ form .pass-txt {
 }
 
 form input[type="submit"] {
+    width: 100%;
     height: 50px;
     margin-top: 30px;
     color: #fff;
-    padding: 0;
     border: none;
-    background: #5372F0;
+    border-radius: 8px;
+    background: #333333;
     cursor: pointer;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease, transform 0.2s ease;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 form input[type="submit"]:hover {
-    background: #2c52ed;
+    background: #4a4a4a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .image-container {
+        display: none; /* Hide image on smaller screens for better usability */
+    }
 }
