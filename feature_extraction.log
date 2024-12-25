@@ -111,3 +111,13 @@
 2024-12-24 20:19:10,664 INFO:Loaded scaler parameters from 'minmax_scaler_params.json'.
 2024-12-24 20:19:10,682 INFO:Data scaled using the loaded MinMaxScaler.
 2024-12-24 20:19:10,819 INFO:Scaled data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'.
+2024-12-25 11:13:20,507 INFO:Base directory set to: C:\Users\phatt\Desktop\code\intro\Talking-and-Singing-Classification\data
+2024-12-25 11:13:20,523 INFO:Found 59 singing files and 60 talking files.
+2024-12-25 11:13:20,523 INFO:Total files to process: 119
+2024-12-25 11:13:41,745 INFO:Successfully extracted features for 119 files.
+2024-12-25 11:13:41,761 INFO:Feature extraction complete. Data saved to 'features.csv'
+2024-12-25 11:13:41,806 INFO:Training set size: 95 samples
+2024-12-25 11:13:41,806 INFO:Testing set size: 24 samples
+2024-12-25 11:13:41,815 INFO:Loaded scaler parameters from 'minmax_scaler_params.json'.
+2024-12-25 11:13:41,828 INFO:Data scaled using the loaded MinMaxScaler.
+2024-12-25 11:13:41,840 INFO:Scaled data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'.
