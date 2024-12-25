@@ -43,3 +43,13 @@
 2024-12-24 19:58:02,246 INFO:Loaded scaler parameters from 'minmax_scaler_params.json'.
 2024-12-24 19:58:02,280 INFO:Data scaled using the loaded MinMaxScaler.
 2024-12-24 19:58:02,296 INFO:Scaled data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'.
+2024-12-25 23:21:51,549 INFO:Base directory set to: D:\ai_project\audio_classification\model_building\data
+2024-12-25 23:21:51,553 INFO:Found 84 singing files and 118 talking files.
+2024-12-25 23:21:51,553 INFO:Total files to process: 202
+2024-12-25 23:22:31,740 INFO:Successfully extracted features for 202 files.
+2024-12-25 23:22:31,803 INFO:Feature extraction complete. Data saved to 'features.csv'
+2024-12-25 23:22:31,860 INFO:Training set size: 161 samples
+2024-12-25 23:22:31,861 INFO:Testing set size: 41 samples
+2024-12-25 23:22:31,864 INFO:Loaded scaler parameters from 'minmax_scaler_params.json'.
+2024-12-25 23:22:31,904 INFO:Data scaled using the loaded MinMaxScaler.
+2024-12-25 23:22:31,955 INFO:Scaled data saved to 'train_features_scaled.csv' and 'test_features_scaled.csv'.
