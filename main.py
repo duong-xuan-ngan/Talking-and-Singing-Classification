@@ -143,8 +143,17 @@ def main():
         else:
             logging.warning(f"Features extraction failed for {file}")
 
-    # create a dataframe from the features and save to csv
+    # create a dataframe from the features
     df = pd.DataFrame(labeled_features)
+    
+    # **Rearrange columns to move 'file_name' to the end**
+    if 'file_name' in df.columns:
+        cols = list(df.columns)
+        cols.remove('file_name')  # Remove 'file_name' from its current position
+        cols.append('file_name')   # Append 'file_name' at the end
+        df = df[cols]               # Reorder the DataFrame columns
+
+    # save to csv
     df.fillna(0, inplace=True)
     df.to_csv('features.csv', index=False)
 
