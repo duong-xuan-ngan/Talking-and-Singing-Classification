@@ -223,15 +223,6 @@ def perform_eda(train_df):
 def handle_class_imbalance(X, y, method='none'):
     """
     Handle class imbalance using specified method.
-
-    Parameters:
-        X (ndarray): Feature matrix.
-        y (ndarray): Labels.
-        method (str): Method to handle imbalance ('none' or 'smote').
-
-    Returns:
-        X_res (ndarray): Resampled feature matrix.
-        y_res (ndarray): Resampled labels.
     """
     if method == 'none':
         logger.info("No class imbalance handling applied.")
@@ -241,7 +232,11 @@ def handle_class_imbalance(X, y, method='none'):
         class_counts = pd.Series(y).value_counts()
         min_samples = min(class_counts)
 
-        if min_samples < 6:
+        if min_samples < 2:
+            logger.error(f"Not enough samples for SMOTE (minimum class has {min_samples} samples). SMOTE cannot be applied.")
+            logger.info("Proceeding without applying SMOTE.")
+            return X, y
+        elif min_samples < 6:
             logger.warning(f"Not enough samples for SMOTE (minimum class has {min_samples} samples). Using k_neighbors={min_samples - 1}")
             # Use k_neighbors = number of samples in minority class - 1
             smote = SMOTE(random_state=42, k_neighbors=min_samples - 1)
@@ -249,15 +244,19 @@ def handle_class_imbalance(X, y, method='none'):
             smote = SMOTE(random_state=42)  # Default k_neighbors=5
 
         logger.info("Applying SMOTE to handle class imbalance...")
-        X_res, y_res = smote.fit_resample(X, y)
-        logger.info("After SMOTE, class distribution:")
-        logger.info(str(pd.Series(y_res).value_counts()))
-        return X_res, y_res
+        try:
+            X_res, y_res = smote.fit_resample(X, y)
+            logger.info("After SMOTE, class distribution:")
+            logger.info(str(pd.Series(y_res).value_counts()))
+            return X_res, y_res
+        except Exception as e:
+            logger.error(f"SMOTE failed: {e}")
+            logger.info("Proceeding without applying SMOTE.")
+            return X, y
     else:
         logger.warning(f"Unknown method '{method}'. No class imbalance handling applied.")
         return X, y
 
-# -----------------------------
 # Create Fine-Tuned Model Function
 # -----------------------------
 def create_fine_tuned_model(existing_model, input_dim, temporal=False, lstm_units=64, dropout_rate=0.3, trainable_layers=0):
@@ -299,10 +298,6 @@ def create_fine_tuned_model(existing_model, input_dim, temporal=False, lstm_unit
     # Add new layers on top
     x = Dense(64, activation='relu', name='new_dense_1')(x)
     x = Dropout(dropout_rate, name='new_dropout_1')(x)
-    x = Dense(32, activation='relu', name='new_dense_2')(x)
-    x = Dropout(dropout_rate, name='new_dropout_2')(x)
-    x = Dense(16, activation='relu', name='new_dense_3')(x)
-    x = Dropout(dropout_rate, name='new_dropout_3')(x)
     outputs = Dense(1, activation='sigmoid', name='output_layer')(x)
 
     # Create the new model
