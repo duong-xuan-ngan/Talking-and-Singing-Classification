@@ -259,18 +259,15 @@ def handle_class_imbalance(X, y, method='none'):
 
 # Create Fine-Tuned Model Function
 # -----------------------------
-def create_fine_tuned_model(existing_model, input_dim, temporal=False, lstm_units=64, dropout_rate=0.3, trainable_layers=0):
+def create_fine_tuned_model(existing_model, input_dim, dropout_rate=0.3):
     """
-    Create a new model for fine-tuning while preserving the original model's knowledge.
-
+    Fine-tunes the existing model by retraining only the last layer.
+    
     Parameters:
         existing_model (Model): Pre-trained Keras model.
         input_dim (int): Number of input features.
-        temporal (bool): Whether to add temporal layers (LSTM). Default is False.
-        lstm_units (int): Number of units in LSTM layer if temporal=True.
-        dropout_rate (float): Dropout rate.
-        trainable_layers (int): Number of top pre-trained layers to keep trainable.
-
+        dropout_rate (float): Dropout rate for the last layer.
+    
     Returns:
         new_model (Model): Compiled Keras model ready for training.
     """
@@ -278,41 +275,34 @@ def create_fine_tuned_model(existing_model, input_dim, temporal=False, lstm_unit
         logger.error("No existing model provided for fine-tuning.")
         return None
 
-    # Define the input layer
-    inputs = Input(shape=(input_dim,), name='input_layer')
-    x = inputs
+    # Freeze all layers except the last one
+    for layer in existing_model.layers[:-1]:
+        layer.trainable = False
+        logger.debug(f"Layer '{layer.name}' frozen.")
 
-    # Iterate through the existing model layers
-    for i, layer in enumerate(existing_model.layers):
-        # Freeze layers except the last 'trainable_layers' layers
-        if i < len(existing_model.layers) - trainable_layers:
-            layer.trainable = False
-            logger.debug(f"Layer '{layer.name}' frozen.")
-        else:
-            layer.trainable = True
-            logger.debug(f"Layer '{layer.name}' set to trainable.")
+    # Optionally, you can replace the last layer if needed
+    # For example, to change activation or units
+    # Here, we'll assume it's a binary classification with one unit and sigmoid activation
+    last_layer = existing_model.layers[-1]
+    if not isinstance(last_layer, Dense) or last_layer.units != 1 or last_layer.activation != tf.keras.activations.sigmoid:
+        # Replace the last layer if it doesn't match the desired configuration
+        x = existing_model.layers[-2].output
+        x = Dense(1, activation='sigmoid', name='output_layer')(x)
+        new_model = Model(inputs=existing_model.input, outputs=x)
+        logger.info("Replaced the last layer with a new Dense layer.")
+    else:
+        new_model = existing_model
+        logger.info("Last layer is already suitable for retraining.")
 
-        # Add the layer to the new model
-        x = layer(x)
-
-    # Add new layers on top
-    x = Dense(64, activation='relu', name='new_dense_1')(x)
-    x = Dropout(dropout_rate, name='new_dropout_1')(x)
-    outputs = Dense(1, activation='sigmoid', name='output_layer')(x)
-
-    # Create the new model
-    new_model = Model(inputs=inputs, outputs=outputs)
-
-    # Compile the model with a lower learning rate for fine-tuning
-    optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
+    # Compile the model
     new_model.compile(
-        optimizer=optimizer,
+        optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
         loss='binary_crossentropy',
         metrics=['accuracy']
     )
 
-    logger.info("Created new fine-tuned model with knowledge from existing model.")
     return new_model
+
 
 # -----------------------------
 # Train Model Function
