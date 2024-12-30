@@ -261,80 +261,78 @@ def handle_class_imbalance(X, y, method='none'):
 # -----------------------------
 def create_fine_tuned_model(existing_model, input_dim, dropout_rate=0.3):
     """
-    Fine-tunes the existing model by retraining only the last layer.
-    
-    Parameters:
-        existing_model (Model): Pre-trained Keras model.
-        input_dim (int): Number of input features.
-        dropout_rate (float): Dropout rate for the last layer.
-    
-    Returns:
-        new_model (Model): Compiled Keras model ready for training.
+    Fine-tune only the last layer to address bias while preserving learned features.
+    The high accuracy of the pre-trained model suggests good feature extraction,
+    so we only need to adjust the decision boundary.
     """
-    if not existing_model:
-        logger.error("No existing model provided for fine-tuning.")
-        return None
-
     # Freeze all layers except the last one
     for layer in existing_model.layers[:-1]:
         layer.trainable = False
-        logger.debug(f"Layer '{layer.name}' frozen.")
-
-    # Optionally, you can replace the last layer if needed
-    # For example, to change activation or units
-    # Here, we'll assume it's a binary classification with one unit and sigmoid activation
+    
+    # Unfreeze only the last layer
+    existing_model.layers[-1].trainable = True
+    
+    # Modify the last layer's bias to counter the singing bias
     last_layer = existing_model.layers[-1]
-    if not isinstance(last_layer, Dense) or last_layer.units != 1 or last_layer.activation != tf.keras.activations.sigmoid:
-        # Replace the last layer if it doesn't match the desired configuration
-        x = existing_model.layers[-2].output
-        x = Dense(1, activation='sigmoid', name='output_layer')(x)
-        new_model = Model(inputs=existing_model.input, outputs=x)
-        logger.info("Replaced the last layer with a new Dense layer.")
-    else:
-        new_model = existing_model
-        logger.info("Last layer is already suitable for retraining.")
-
-    # Compile the model
+    weights = last_layer.get_weights()
+    # Adjust the bias towards talking (negative bias)
+    if len(weights) > 1:  # Ensure there are weights and bias
+        weights[1] = np.array([-0.2])  # Bias initialization favoring talking class
+        last_layer.set_weights(weights)
+    
+    # Use the existing model architecture without adding new layers
+    new_model = Model(inputs=existing_model.input, outputs=existing_model.output)
+    
+    # Use a very small learning rate for fine-tuning
+    optimizer = tf.keras.optimizers.Adam(learning_rate=1e-5)
+    
     new_model.compile(
-        optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
+        optimizer=optimizer,
         loss='binary_crossentropy',
-        metrics=['accuracy']
+        metrics=['accuracy', tf.keras.metrics.AUC()]
     )
-
+    
     return new_model
-
 
 # -----------------------------
 # Train Model Function
 # -----------------------------
 def train_model(model, X_train, y_train, class_weights=None, epochs=100, batch_size=32, validation_split=0.2):
     """
-    Train the Neural Network with early stopping.
-
-    Parameters:
-        model (Model): Compiled Keras model.
-        X_train (ndarray): Training features.
-        y_train (ndarray): Training labels.
-        class_weights (dict): Weights associated with classes.
-        epochs (int): Maximum number of epochs.
-        batch_size (int): Batch size for training.
-        validation_split (float): Fraction of training data for validation.
-
-    Returns:
-        history (History): Training history.
+    Modified training function focusing on bias correction
     """
-    early_stop = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
-
+    # Use stronger class weights to counter the bias
+    class_weights = {
+        0: 1.5,  # Higher weight for talking class
+        1: 0.5   # Lower weight for singing class
+    }
+    
+    early_stop = EarlyStopping(
+        monitor='val_loss',
+        patience=20,  # Increased patience
+        restore_best_weights=True,
+        mode='min'
+    )
+    
+    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
+        monitor='val_loss',
+        factor=0.1,
+        patience=10,
+        min_lr=1e-7
+    )
+    
+    # Training with modified parameters
     history = model.fit(
         X_train, y_train,
         epochs=epochs,
         batch_size=batch_size,
         validation_split=validation_split,
-        callbacks=[early_stop],
+        callbacks=[early_stop, reduce_lr],
         class_weight=class_weights,
+        shuffle=True,
         verbose=1
     )
-
+    
     return history
 
 # -----------------------------
