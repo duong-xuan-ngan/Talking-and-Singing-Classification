@@ -10,6 +10,8 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model, Model
 from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.regularizers import l1, l2
+from tensorflow.keras.layers import BatchNormalization
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score
 from imblearn.over_sampling import SMOTE  # For handling class imbalance
 from datetime import datetime
@@ -223,6 +225,15 @@ def perform_eda(train_df):
 def handle_class_imbalance(X, y, method='none'):
     """
     Handle class imbalance using specified method.
+
+    Parameters:
+        X (ndarray): Feature matrix.
+        y (ndarray): Labels.
+        method (str): Method to handle imbalance ('none' or 'smote').
+
+    Returns:
+        X_res (ndarray): Resampled feature matrix.
+        y_res (ndarray): Resampled labels.
     """
     if method == 'none':
         logger.info("No class imbalance handling applied.")
@@ -232,11 +243,7 @@ def handle_class_imbalance(X, y, method='none'):
         class_counts = pd.Series(y).value_counts()
         min_samples = min(class_counts)
 
-        if min_samples < 2:
-            logger.error(f"Not enough samples for SMOTE (minimum class has {min_samples} samples). SMOTE cannot be applied.")
-            logger.info("Proceeding without applying SMOTE.")
-            return X, y
-        elif min_samples < 6:
+        if min_samples < 6:
             logger.warning(f"Not enough samples for SMOTE (minimum class has {min_samples} samples). Using k_neighbors={min_samples - 1}")
             # Use k_neighbors = number of samples in minority class - 1
             smote = SMOTE(random_state=42, k_neighbors=min_samples - 1)
@@ -244,100 +251,116 @@ def handle_class_imbalance(X, y, method='none'):
             smote = SMOTE(random_state=42)  # Default k_neighbors=5
 
         logger.info("Applying SMOTE to handle class imbalance...")
-        try:
-            X_res, y_res = smote.fit_resample(X, y)
-            logger.info("After SMOTE, class distribution:")
-            logger.info(str(pd.Series(y_res).value_counts()))
-            return X_res, y_res
-        except Exception as e:
-            logger.error(f"SMOTE failed: {e}")
-            logger.info("Proceeding without applying SMOTE.")
-            return X, y
+        X_res, y_res = smote.fit_resample(X, y)
+        logger.info("After SMOTE, class distribution:")
+        logger.info(str(pd.Series(y_res).value_counts()))
+        return X_res, y_res
     else:
         logger.warning(f"Unknown method '{method}'. No class imbalance handling applied.")
         return X, y
 
-# Create Fine-Tuned Model Function
 # -----------------------------
-def create_fine_tuned_model(existing_model, input_dim, dropout_rate=0.3):
+# Create Fine-Tuned Model Function
+def create_fine_tuned_model(existing_model, input_dim, dropout_rate=0.15, l2_reg=0.001):
     """
-    Fine-tune only the last layer to address bias while preserving learned features.
-    The high accuracy of the pre-trained model suggests good feature extraction,
-    so we only need to adjust the decision boundary.
+    Create a fine-tuned model that completely preserves the pre-trained model
+    and only trains new layers on top with a higher learning rate.
     """
-    # Freeze all layers except the last one
-    for layer in existing_model.layers[:-1]:
-        layer.trainable = False
+    if not existing_model:
+        logger.error("No existing model provided for fine-tuning.")
+        return None
     
-    # Unfreeze only the last layer
-    existing_model.layers[-1].trainable = True
+    # Freeze the entire pre-trained model
+    existing_model.trainable = False
+    logger.info("Pre-trained model frozen to preserve knowledge")
     
-    # Modify the last layer's bias to counter the singing bias
-    last_layer = existing_model.layers[-1]
-    weights = last_layer.get_weights()
-    # Adjust the bias towards talking (negative bias)
-    if len(weights) > 1:  # Ensure there are weights and bias
-        weights[1] = np.array([-0.2])  # Bias initialization favoring talking class
-        last_layer.set_weights(weights)
+    # Create input layer
+    inputs = Input(shape=(input_dim,))
     
-    # Use the existing model architecture without adding new layers
-    new_model = Model(inputs=existing_model.input, outputs=existing_model.output)
+    # Pass through the frozen pre-trained model
+    x = existing_model(inputs)
     
-    # Use a very small learning rate for fine-tuning
-    optimizer = tf.keras.optimizers.Adam(learning_rate=1e-5)
+    # Add new trainable layers on top with stronger capacity
+    x = Dense(128, activation='relu',
+              kernel_regularizer=l2(l2_reg),
+              name='new_dense_1')(x)
+    x = BatchNormalization(name='new_bn_1')(x)
+    x = Dropout(dropout_rate, name='new_dropout_1')(x)
+    
+    # Final output layer
+    outputs = Dense(1, activation='sigmoid',
+                   kernel_initializer='glorot_uniform',
+                   name='new_output')(x)
+    
+    # Create new model
+    new_model = Model(inputs=inputs, outputs=outputs)
+    
+    # Use higher learning rate since we're only training new layers
+    optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)  # 10x higher than before
     
     new_model.compile(
         optimizer=optimizer,
         loss='binary_crossentropy',
-        metrics=['accuracy', tf.keras.metrics.AUC()]
+        metrics=['accuracy',
+                tf.keras.metrics.AUC(name='auc'),
+                tf.keras.metrics.Precision(name='precision'),
+                tf.keras.metrics.Recall(name='recall')]
     )
     
+    logger.info("Created fine-tuned model with frozen pre-trained layers and new trainable layers")
     return new_model
 
 # -----------------------------
 # Train Model Function
 # -----------------------------
-def train_model(model, X_train, y_train, class_weights=None, epochs=100, batch_size=32, validation_split=0.2):
+# Add these parameters to your training call
+def train_fine_tuned_model(model, X_train, y_train, X_val, y_val, epochs=100, batch_size=32):
     """
-    Modified training function focusing on bias correction
+    Train the fine-tuned model with early stopping and learning rate reduction.
     """
-    # Use stronger class weights to counter the bias
-    class_weights = {
-        0: 1.5,  # Higher weight for talking class
-        1: 0.5   # Lower weight for singing class
-    }
-    
-    early_stop = EarlyStopping(
-        monitor='val_loss',
-        patience=20,  # Increased patience
+    early_stopping = EarlyStopping(
+        monitor='val_auc',  # Monitor AUC instead of accuracy
+        patience=15,
         restore_best_weights=True,
-        mode='min'
+        mode='max'
     )
     
     reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
         monitor='val_loss',
-        factor=0.1,
-        patience=10,
-        min_lr=1e-7
+        factor=0.5,
+        patience=5,
+        min_lr=1e-6
     )
     
-    # Training with modified parameters
     history = model.fit(
         X_train, y_train,
+        validation_data=(X_val, y_val),
         epochs=epochs,
         batch_size=batch_size,
-        validation_split=validation_split,
-        callbacks=[early_stop, reduce_lr],
-        class_weight=class_weights,
-        shuffle=True,
+        callbacks=[early_stopping, reduce_lr],
         verbose=1
     )
     
     return history
-
-# -----------------------------
 # Evaluate Model Function
 # -----------------------------
+
+# Add this after training to monitor feature importance
+def analyze_feature_importance(model, X_test, feature_names):
+    # Get the weights of the feature reweighting layer
+    feature_weights = model.get_layer('feature_reweight').get_weights()[0]
+    
+    # Calculate average absolute weight for each feature
+    feature_importance = np.mean(np.abs(feature_weights), axis=1)
+    
+    # Create feature importance dictionary
+    importance_dict = dict(zip(feature_names, feature_importance))
+    
+    # Print top 10 most influential features
+    top_features = sorted(importance_dict.items(), key=lambda x: x[1], reverse=True)[:10]
+    logger.info("\nTop 10 most influential features:")
+    for feature, importance in top_features:
+        logger.info(f"{feature}: {importance:.4f}")
 def evaluate_model(model, history, X_test, y_test):
     """
     Evaluate the trained model on the test set and plot training history.
@@ -467,33 +490,31 @@ def main():
     # Step 7: Handle class imbalance
     X_train, y_train = handle_class_imbalance(X_train, y_train, method='smote')
 
-    # Step 8: Define fine-tuning parameters
-    temporal = False  # Set to False as data is not temporal
-    trainable_layers = 2  # Number of top pre-trained layers to keep trainable
-
-    # Step 9: Create fine-tuned model
+    # Step 8: Create fine-tuned model (simplified parameters)
     fine_tuned_model = create_fine_tuned_model(
         existing_model=pretrained_model,
         input_dim=X_train.shape[1],
-        temporal=temporal,
-        lstm_units=64,  # Not used since temporal=False
         dropout_rate=0.3,
-        trainable_layers=trainable_layers
+        l2_reg=0.001
     )
 
     if fine_tuned_model is None:
         logger.error("Failed to create fine-tuned model.")
         return
 
-    # Step 10: Train the model
-    history = train_model(
+    # Step 10: Train the model with validation split
+    validation_split_idx = int(X_train.shape[0] * 0.8)
+    X_val = X_train[validation_split_idx:]
+    y_val = y_train[validation_split_idx:]
+    X_train_final = X_train[:validation_split_idx]
+    y_train_final = y_train[:validation_split_idx]
+
+    history = train_fine_tuned_model(
         model=fine_tuned_model,
-        X_train=X_train,
-        y_train=y_train,
-        class_weights=None,  # Already handled by SMOTE
-        epochs=100,
-        batch_size=32,
-        validation_split=0.2
+        X_train=X_train_final,
+        y_train=y_train_final,
+        X_val=X_val,
+        y_val=y_val
     )
 
     # Step 11: Evaluate the model

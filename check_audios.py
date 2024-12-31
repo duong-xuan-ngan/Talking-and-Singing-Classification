@@ -3,7 +3,7 @@ import pandas as pd
 import tensorflow as tf
 
 # Load the trained model
-model = tf.keras.models.load_model('best_neural_network_model.h5')
+model = tf.keras.models.load_model('fine_tuned_models/fine_tuned_model_vlatest.h5')
 
 # Load the input test data
 input_file = 'testing.csv'  # Use the test dataset
@@ -15,8 +15,8 @@ for col in required_columns:
     if col not in data.columns:
         raise KeyError(f"Missing required column: '{col}'")
 
-# Define feature columns explicitly
-feature_columns = [col for col in data.columns if col not in ['file_name', 'label']]
+# Define feature columns explicitly and ensure correct order
+feature_columns = [col for col in data.columns if col not in ['label', 'file_name']]
 
 # Extract features and labels
 X = data[feature_columns].values
@@ -66,9 +66,8 @@ if len(incorrect_indices) > 0:
     # Get current misclassifications
     wrong_audios = data.iloc[incorrect_indices].copy()
     
-    # Reorder columns to match training data format
-    # First all feature columns, then file_name, then label
-    column_order = feature_columns + ['file_name', 'label']
+    # Reorder columns: features, then label, then file_name
+    column_order = feature_columns + ['label', 'file_name']
     wrong_audios = wrong_audios[column_order]
     
     try:
@@ -76,11 +75,17 @@ if len(incorrect_indices) > 0:
         existing_wrong_audios = pd.read_csv('wrong_audios.csv')
         print("\nFound existing wrong_audios.csv with", len(existing_wrong_audios), "samples")
         
+        # Ensure existing data has the correct column order
+        existing_wrong_audios = existing_wrong_audios[column_order]
+        
         # Combine existing and new misclassifications
         combined_wrong_audios = pd.concat([existing_wrong_audios, wrong_audios], axis=0)
         
         # Remove duplicates based on file_name to keep latest prediction
         combined_wrong_audios = combined_wrong_audios.drop_duplicates(subset=['file_name'], keep='last')
+        
+        # Ensure final data has correct column order
+        combined_wrong_audios = combined_wrong_audios[column_order]
         
         # Save the updated dataset
         combined_wrong_audios.to_csv('wrong_audios.csv', index=False)
@@ -92,6 +97,6 @@ if len(incorrect_indices) > 0:
         wrong_audios.to_csv('wrong_audios.csv', index=False)
         print(f"\nCreated new wrong_audios.csv with {len(wrong_audios)} misclassified samples")
     
-    print("Format: features + file_name + label (matches training data format)")
+    print("Format: features + label + file_name")
 else:
     print("\nNo misclassifications found in this run.")
