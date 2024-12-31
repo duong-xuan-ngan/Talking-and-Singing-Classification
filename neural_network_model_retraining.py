@@ -10,8 +10,6 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model, Model
 from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.regularizers import l1, l2
-from tensorflow.keras.layers import BatchNormalization
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score
 from imblearn.over_sampling import SMOTE  # For handling class imbalance
 from datetime import datetime
@@ -261,106 +259,102 @@ def handle_class_imbalance(X, y, method='none'):
 
 # -----------------------------
 # Create Fine-Tuned Model Function
-def create_fine_tuned_model(existing_model, input_dim, dropout_rate=0.15, l2_reg=0.001):
+# -----------------------------
+def create_fine_tuned_model(existing_model, input_dim, temporal=False, lstm_units=64, dropout_rate=0.3, trainable_layers=0):
     """
-    Create a fine-tuned model that completely preserves the pre-trained model
-    and only trains new layers on top with a higher learning rate.
+    Create a new model for fine-tuning while preserving the original model's knowledge.
+
+    Parameters:
+        existing_model (Model): Pre-trained Keras model.
+        input_dim (int): Number of input features.
+        temporal (bool): Whether to add temporal layers (LSTM). Default is False.
+        lstm_units (int): Number of units in LSTM layer if temporal=True.
+        dropout_rate (float): Dropout rate.
+        trainable_layers (int): Number of top pre-trained layers to keep trainable.
+
+    Returns:
+        new_model (Model): Compiled Keras model ready for training.
     """
     if not existing_model:
         logger.error("No existing model provided for fine-tuning.")
         return None
-    
-    # Freeze the entire pre-trained model
-    existing_model.trainable = False
-    logger.info("Pre-trained model frozen to preserve knowledge")
-    
-    # Create input layer
-    inputs = Input(shape=(input_dim,))
-    
-    # Pass through the frozen pre-trained model
-    x = existing_model(inputs)
-    
-    # Add new trainable layers on top with stronger capacity
-    x = Dense(128, activation='relu',
-              kernel_regularizer=l2(l2_reg),
-              name='new_dense_1')(x)
-    x = BatchNormalization(name='new_bn_1')(x)
+
+    # Define the input layer
+    inputs = Input(shape=(input_dim,), name='input_layer')
+    x = inputs
+
+    # Iterate through the existing model layers
+    for i, layer in enumerate(existing_model.layers):
+        # Freeze layers except the last 'trainable_layers' layers
+        if i < len(existing_model.layers) - trainable_layers:
+            layer.trainable = False
+            logger.debug(f"Layer '{layer.name}' frozen.")
+        else:
+            layer.trainable = True
+            logger.debug(f"Layer '{layer.name}' set to trainable.")
+
+        # Add the layer to the new model
+        x = layer(x)
+
+    # Add new layers on top
+    x = Dense(64, activation='relu', name='new_dense_1')(x)
     x = Dropout(dropout_rate, name='new_dropout_1')(x)
-    
-    # Final output layer
-    outputs = Dense(1, activation='sigmoid',
-                   kernel_initializer='glorot_uniform',
-                   name='new_output')(x)
-    
-    # Create new model
+    x = Dense(32, activation='relu', name='new_dense_2')(x)
+    x = Dropout(dropout_rate, name='new_dropout_2')(x)
+    x = Dense(16, activation='relu', name='new_dense_3')(x)
+    x = Dropout(dropout_rate, name='new_dropout_3')(x)
+    outputs = Dense(1, activation='sigmoid', name='output_layer')(x)
+
+    # Create the new model
     new_model = Model(inputs=inputs, outputs=outputs)
-    
-    # Use higher learning rate since we're only training new layers
-    optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)  # 10x higher than before
-    
+
+    # Compile the model with a lower learning rate for fine-tuning
+    optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
     new_model.compile(
         optimizer=optimizer,
         loss='binary_crossentropy',
-        metrics=['accuracy',
-                tf.keras.metrics.AUC(name='auc'),
-                tf.keras.metrics.Precision(name='precision'),
-                tf.keras.metrics.Recall(name='recall')]
+        metrics=['accuracy']
     )
-    
-    logger.info("Created fine-tuned model with frozen pre-trained layers and new trainable layers")
+
+    logger.info("Created new fine-tuned model with knowledge from existing model.")
     return new_model
 
 # -----------------------------
 # Train Model Function
 # -----------------------------
-# Add these parameters to your training call
-def train_fine_tuned_model(model, X_train, y_train, X_val, y_val, epochs=100, batch_size=32):
+def train_model(model, X_train, y_train, class_weights=None, epochs=100, batch_size=32, validation_split=0.2):
     """
-    Train the fine-tuned model with early stopping and learning rate reduction.
+    Train the Neural Network with early stopping.
+
+    Parameters:
+        model (Model): Compiled Keras model.
+        X_train (ndarray): Training features.
+        y_train (ndarray): Training labels.
+        class_weights (dict): Weights associated with classes.
+        epochs (int): Maximum number of epochs.
+        batch_size (int): Batch size for training.
+        validation_split (float): Fraction of training data for validation.
+
+    Returns:
+        history (History): Training history.
     """
-    early_stopping = EarlyStopping(
-        monitor='val_auc',  # Monitor AUC instead of accuracy
-        patience=15,
-        restore_best_weights=True,
-        mode='max'
-    )
-    
-    reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
-        monitor='val_loss',
-        factor=0.5,
-        patience=5,
-        min_lr=1e-6
-    )
-    
+    early_stop = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+
     history = model.fit(
         X_train, y_train,
-        validation_data=(X_val, y_val),
         epochs=epochs,
         batch_size=batch_size,
-        callbacks=[early_stopping, reduce_lr],
+        validation_split=validation_split,
+        callbacks=[early_stop],
+        class_weight=class_weights,
         verbose=1
     )
-    
+
     return history
+
+# -----------------------------
 # Evaluate Model Function
 # -----------------------------
-
-# Add this after training to monitor feature importance
-def analyze_feature_importance(model, X_test, feature_names):
-    # Get the weights of the feature reweighting layer
-    feature_weights = model.get_layer('feature_reweight').get_weights()[0]
-    
-    # Calculate average absolute weight for each feature
-    feature_importance = np.mean(np.abs(feature_weights), axis=1)
-    
-    # Create feature importance dictionary
-    importance_dict = dict(zip(feature_names, feature_importance))
-    
-    # Print top 10 most influential features
-    top_features = sorted(importance_dict.items(), key=lambda x: x[1], reverse=True)[:10]
-    logger.info("\nTop 10 most influential features:")
-    for feature, importance in top_features:
-        logger.info(f"{feature}: {importance:.4f}")
 def evaluate_model(model, history, X_test, y_test):
     """
     Evaluate the trained model on the test set and plot training history.
@@ -490,31 +484,33 @@ def main():
     # Step 7: Handle class imbalance
     X_train, y_train = handle_class_imbalance(X_train, y_train, method='smote')
 
-    # Step 8: Create fine-tuned model (simplified parameters)
+    # Step 8: Define fine-tuning parameters
+    temporal = False  # Set to False as data is not temporal
+    trainable_layers = 2  # Number of top pre-trained layers to keep trainable
+
+    # Step 9: Create fine-tuned model
     fine_tuned_model = create_fine_tuned_model(
         existing_model=pretrained_model,
         input_dim=X_train.shape[1],
+        temporal=temporal,
+        lstm_units=64,  # Not used since temporal=False
         dropout_rate=0.3,
-        l2_reg=0.001
+        trainable_layers=trainable_layers
     )
 
     if fine_tuned_model is None:
         logger.error("Failed to create fine-tuned model.")
         return
 
-    # Step 10: Train the model with validation split
-    validation_split_idx = int(X_train.shape[0] * 0.8)
-    X_val = X_train[validation_split_idx:]
-    y_val = y_train[validation_split_idx:]
-    X_train_final = X_train[:validation_split_idx]
-    y_train_final = y_train[:validation_split_idx]
-
-    history = train_fine_tuned_model(
+    # Step 10: Train the model
+    history = train_model(
         model=fine_tuned_model,
-        X_train=X_train_final,
-        y_train=y_train_final,
-        X_val=X_val,
-        y_val=y_val
+        X_train=X_train,
+        y_train=y_train,
+        class_weights=None,  # Already handled by SMOTE
+        epochs=100,
+        batch_size=32,
+        validation_split=0.2
     )
 
     # Step 11: Evaluate the model
