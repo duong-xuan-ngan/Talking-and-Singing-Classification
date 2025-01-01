@@ -25,8 +25,8 @@ def extract_features(file_path, top_db=20):
     - features (dict): A dictionary of extracted features.
     """
     try:
-        # Load the audio file with a duration of 30 seconds
-        y, sr = librosa.load(file_path, sr=None, duration=30)
+        # Load the audio file 
+        y, sr = librosa.load(file_path, sr=None)
 
         # Trim silence from the beginning and end
         y_trimmed, _ = librosa.effects.trim(y, top_db=top_db)
