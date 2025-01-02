@@ -24,49 +24,6 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-def download_youtube_audio(youtube_url, output_dir='downloaded_audio'):
-    """
-    Downloads audio from a YouTube URL using yt_dlp and saves it as 'audio.wav'.
-
-    :param youtube_url: The YouTube video URL.
-    :param output_dir: Directory to save the downloaded audio file.
-    :return: Path to the downloaded WAV audio file.
-    """
-    os.makedirs(output_dir, exist_ok=True)
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'outtmpl': os.path.join(output_dir, 'audio.%(ext)s'),  # Fixed filename: audio.mp3 initially
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'wav',  # Convert directly to WAV
-            'preferredquality': '192',  # Quality parameter is ignored for WAV, but kept for consistency
-        }],
-        'quiet': True,
-        'no_warnings': True,
-        'restrictfilenames': True,  # Ensures filenames are safe (only ASCII characters)
-    }
-
-    try:
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([youtube_url])
-            # After post-processing, the file will be 'audio.wav'
-            downloaded_file = os.path.join(output_dir, 'audio.wav')
-            if not os.path.isfile(downloaded_file):
-                error_msg = f"Expected output file '{downloaded_file}' not found after download."
-                print(error_msg)
-                logging.error(error_msg)
-                raise RuntimeError(error_msg)
-            print(f"Downloaded and converted audio to '{downloaded_file}'.")
-            logging.info(f"Downloaded and converted audio from '{youtube_url}' to '{downloaded_file}'.")
-    except Exception as e:
-        error_msg = f"Failed to download and convert audio from YouTube URL '{youtube_url}': {e}"
-        print(error_msg)
-        logging.error(error_msg)
-        raise RuntimeError(error_msg)
-
-    return downloaded_file
-
-
 # Function to record audio from the microphone with enforced duration constraints
 def record_audio_threaded(output_dir='recorded_audio', samplerate=44100, channels=2, min_duration=10, max_duration=600):
     """
@@ -374,11 +331,7 @@ def main():
 if __name__ == "__main__":
     main()
 
-import os
-import yt_dlp
-import shutil
-import logging
-from pydub import AudioSegment
+
 
 logging.basicConfig(level=logging.INFO)
 
