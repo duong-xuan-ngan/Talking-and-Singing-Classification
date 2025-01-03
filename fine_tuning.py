@@ -1,4 +1,3 @@
-# Filename: neural_network_model_retraining.py
 import os
 import shutil
 import pandas as pd
