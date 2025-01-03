@@ -16,24 +16,21 @@ from imblearn.over_sampling import SMOTE  # For handling class imbalance
 from tqdm import tqdm  # For progress bars
 import keras_tuner as kt
 import sys
+from datetime import datetime
+import io
 
-class Tee(object):
-    def __init__(self, *files):
-        self.files = files
+# Remove Tee class and logging setup
 
-    def write(self, obj):
-        for f in self.files:
-            f.write(obj)
-            f.flush()  # Ensure it's written immediately
+def setup_results_dir():
+    """Setup results directory"""
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    results_dir = 'model_results'
+    os.makedirs(results_dir, exist_ok=True)
+    return results_dir, timestamp
 
-    def flush(self):
-        for f in self.files:
-            f.flush()
-
-
-# Suppress TensorFlow warnings for cleaner output
-import logging
-logging.getLogger('tensorflow').setLevel(logging.ERROR)
+def save_plots(fig, filename, results_dir):
+    """Save matplotlib figures"""
+    fig.savefig(os.path.join(results_dir, filename))
 
 # -----------------------------
 # Stage 1: Loading the Data
@@ -65,7 +62,7 @@ def load_data(train_path='train_features_scaled.csv', test_path='test_features_s
 # -----------------------------
 # Stage 2: Exploratory Data Analysis (EDA)
 # -----------------------------
-def perform_eda(train_df):
+def perform_eda(train_df, results_dir):
     """
     Perform EDA: Class distribution and feature correlations.
     
@@ -79,6 +76,7 @@ def perform_eda(train_df):
     plt.xticks([0,1], ['Talking', 'Singing'])
     plt.xlabel('Class')
     plt.ylabel('Count')
+    save_plots(plt.gcf(), 'class_distribution.png', results_dir)
     plt.show()
     
     # Print class counts
@@ -90,6 +88,7 @@ def perform_eda(train_df):
     corr = train_df.corr()
     sns.heatmap(corr, cmap='coolwarm', fmt=".2f")
     plt.title('Feature Correlation Matrix')
+    save_plots(plt.gcf(), 'correlation_matrix.png', results_dir)
     plt.show()
 
 # -----------------------------
@@ -115,7 +114,7 @@ def handle_class_imbalance(X, y, method='none'):
         print("Applying SMOTE to handle class imbalance...")
         smote = SMOTE(random_state=42)
         X_res, y_res = smote.fit_resample(X, y)
-        print("After SMOTE, class distribution:")
+        print("After SMote, class distribution:")
         print(pd.Series(y_res).value_counts())
         return X_res, y_res
     else:
@@ -198,7 +197,7 @@ def train_model(model, X_train, y_train, class_weights=None, epochs=100, batch_s
 # -----------------------------
 # Stage 6: Evaluating the Model
 # -----------------------------
-def evaluate_model(model, history, X_test, y_test):
+def evaluate_model(model, history, X_test, y_test, results_dir):
     """
     Evaluate the trained model on the test set and plot training history.
     
@@ -226,6 +225,17 @@ def evaluate_model(model, history, X_test, y_test):
     print(class_report)
     print(f"ROC-AUC Score: {roc_auc:.4f}")
     
+    # Save metrics to file
+    with open(os.path.join(results_dir, 'model_evaluation.txt'), 'w') as f:
+        f.write(f"Model Evaluation Results\n")
+        f.write(f"======================\n")
+        f.write(f"Accuracy: {accuracy:.4f}\n")
+        f.write(f"ROC-AUC Score: {roc_auc:.4f}\n")
+        f.write("\nConfusion Matrix:\n")
+        f.write(str(conf_matrix))
+        f.write("\n\nClassification Report:\n")
+        f.write(str(class_report))
+
     # Plotting Training History
     plt.figure(figsize=(12,5))
     
@@ -247,6 +257,7 @@ def evaluate_model(model, history, X_test, y_test):
     plt.ylabel('Loss')
     plt.legend()
     
+    save_plots(plt.gcf(), 'training_history.png', results_dir)
     plt.tight_layout()
     plt.show()
 
@@ -350,7 +361,7 @@ def hyperparameter_tuning(X_train, y_train, input_dim, max_trials=10, executions
 # -----------------------------
 # Stage 8: Final Evaluation of the Optimized Model
 # -----------------------------
-def final_evaluation(best_model, history_best, X_test, y_test):
+def final_evaluation(best_model, history_best, X_test, y_test, results_dir):
     """
     Evaluate the optimized model on the test set.
     
@@ -378,6 +389,17 @@ def final_evaluation(best_model, history_best, X_test, y_test):
     print(class_report_best)
     print(f"ROC-AUC Score: {roc_auc_best:.4f}")
     
+    # Save metrics to file
+    with open(os.path.join(results_dir, 'optimized_model_evaluation.txt'), 'w') as f:
+        f.write(f"Optimized Model Evaluation Results\n")
+        f.write(f"================================\n")
+        f.write(f"Accuracy: {accuracy_best:.4f}\n")
+        f.write(f"ROC-AUC Score: {roc_auc_best:.4f}\n")
+        f.write("\nConfusion Matrix:\n")
+        f.write(str(conf_matrix_best))
+        f.write("\n\nClassification Report:\n")
+        f.write(str(class_report_best))
+
     # Plotting Training History
     plt.figure(figsize=(12,5))
     
@@ -399,6 +421,7 @@ def final_evaluation(best_model, history_best, X_test, y_test):
     plt.ylabel('Loss')
     plt.legend()
     
+    save_plots(plt.gcf(), 'optimized_training_history.png', results_dir)
     plt.tight_layout()
     plt.show()
 
@@ -421,84 +444,72 @@ def save_model_and_scaler(model, model_path='best_neural_network_model.h5'):
 # Stage 10: Main Function
 # -----------------------------
 def main():
-    # -----------------------------
-    # Load the Data
-    # -----------------------------
-    train_df, test_df = load_data()
+    try:
+        # Setup results directory
+        results_dir, timestamp = setup_results_dir()
+        
+        # Load the Data
+        train_df, test_df = load_data()
+        
+        # Perform EDA with results saving
+        perform_eda(train_df, results_dir)
+        
+        # Prepare Features and Labels
+        X_train = train_df.drop('label', axis=1).values
+        y_train = train_df['label'].values
+        X_test = test_df.drop('label', axis=1).values
+        y_test = test_df['label'].values
+        
+        # Handle Class Imbalance (Optional)
+        X_train, y_train = handle_class_imbalance(X_train, y_train, method='smote')
+        
+        # Compute Class Weights (Optional if not using SMOTE)
+        # If you used SMOTE, class weights are generally not needed because SMOTE balances the classes.
+        class_weights = None  # Set to None since SMOTE is applied
+        
+        # Build the Neural Network Model
+        input_dim = X_train.shape[1]
+        model = create_model(input_dim=input_dim, dropout_rate=0.3, optimizer='adam')
+        
+        # Add try-except block for model summary
+        try:
+            model.summary(print_fn=lambda x: print(x))
+        except Exception as e:
+            print("Could not display model summary due to encoding issues.")
+            print("Model structure:", str(model.layers))
+        
+        # Train the Model
+        history = train_model(
+            model,
+            X_train, y_train,
+            class_weights=class_weights,
+            epochs=100,
+            batch_size=32,
+            validation_split=0.2
+        )
+        
+        # Evaluate the Model with results saving
+        evaluate_model(model, history, X_test, y_test, results_dir)
+        
+        # Hyperparameter Tuning
+        best_model, history_best = hyperparameter_tuning(
+            X_train, y_train,
+            input_dim=input_dim,
+            max_trials=10,
+            executions_per_trial=2
+        )
+        
+        # Final Evaluation of Optimized Model with results saving
+        final_evaluation(best_model, history_best, X_test, y_test, results_dir)
+        
+        # Save the model with timestamp
+        model_filename = f'best_neural_network_model_{timestamp}.h5'
+        save_model_and_scaler(best_model, os.path.join(results_dir, model_filename))
+        
+        print(f"\nAll results have been saved in the '{results_dir}' directory!")
     
-    # -----------------------------
-    # Perform EDA
-    # -----------------------------
-    perform_eda(train_df)
-    
-    # -----------------------------
-    # Prepare Features and Labels
-    # -----------------------------
-    X_train = train_df.drop('label', axis=1).values
-    y_train = train_df['label'].values
-    X_test = test_df.drop('label', axis=1).values
-    y_test = test_df['label'].values
-    
-    # -----------------------------
-    # Handle Class Imbalance (Optional)
-    # -----------------------------
-    X_train, y_train = handle_class_imbalance(X_train, y_train, method='smote')
-    
-    # -----------------------------
-    # Compute Class Weights (Optional if not using SMOTE)
-    # -----------------------------
-    # If you used SMOTE, class weights are generally not needed because SMOTE balances the classes.
-    class_weights = None  # Set to None since SMOTE is applied
-    
-    # -----------------------------
-    # Build the Neural Network Model
-    # -----------------------------
-    input_dim = X_train.shape[1]
-    model = create_model(input_dim=input_dim, dropout_rate=0.3, optimizer='adam')
-    model.summary()
-    
-    # -----------------------------
-    # Train the Model
-    # -----------------------------
-    history = train_model(
-        model,
-        X_train, y_train,
-        class_weights=class_weights,
-        epochs=100,
-        batch_size=32,
-        validation_split=0.2
-    )
-    
-    # -----------------------------
-    # Evaluate the Model
-    # -----------------------------
-    evaluate_model(model, history, X_test, y_test)
-    
-    # -----------------------------
-    # Hyperparameter Tuning
-    # -----------------------------
-    best_model, history_best = hyperparameter_tuning(
-        X_train, y_train,
-        input_dim=input_dim,
-        max_trials=10,
-        executions_per_trial=2
-    )
-    
-    # -----------------------------
-    # Final Evaluation of Optimized Model
-    # -----------------------------
-    final_evaluation(best_model, history_best, X_test, y_test)
-    
-    # -----------------------------
-    # Save the Final Model
-    # -----------------------------
-    save_model_and_scaler(best_model, model_path='best_neural_network_model.h5')
-    
-    print("\nNeural Network model building process completed successfully!")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
 
-
-# -----------------------------
-# Execute the Main Function
-# -----------------------------
 if __name__ == "__main__":
     main()

@@ -1,5 +1,4 @@
 # Filename: neural_network_model_retraining.py
-
 import os
 import shutil
 import pandas as pd
@@ -260,15 +259,13 @@ def handle_class_imbalance(X, y, method='none'):
 # -----------------------------
 # Create Fine-Tuned Model Function
 # -----------------------------
-def create_fine_tuned_model(existing_model, input_dim, temporal=False, lstm_units=64, dropout_rate=0.3, trainable_layers=0):
+def create_fine_tuned_model(existing_model, input_dim, dropout_rate=0.3, trainable_layers=0):
     """
     Create a new model for fine-tuning while preserving the original model's knowledge.
 
     Parameters:
         existing_model (Model): Pre-trained Keras model.
         input_dim (int): Number of input features.
-        temporal (bool): Whether to add temporal layers (LSTM). Default is False.
-        lstm_units (int): Number of units in LSTM layer if temporal=True.
         dropout_rate (float): Dropout rate.
         trainable_layers (int): Number of top pre-trained layers to keep trainable.
 
@@ -353,37 +350,66 @@ def train_model(model, X_train, y_train, class_weights=None, epochs=100, batch_s
     return history
 
 # -----------------------------
+# Save Evaluation Results Function
+# -----------------------------
+def save_evaluation_results(accuracy, conf_matrix, class_report, roc_auc, timestamp=None):
+    """
+    Save evaluation metrics to a text file.
+    
+    Parameters:
+        accuracy (float): Model accuracy
+        conf_matrix (array): Confusion matrix
+        class_report (str): Classification report
+        roc_auc (float): ROC-AUC score
+        timestamp (str): Optional timestamp for the filename
+    """
+    if timestamp is None:
+        timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    
+    results_dir = 'evaluation_results'
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
+        
+    result_file = os.path.join(results_dir, f'evaluation_results_{timestamp}.txt')
+    
+    with open(result_file, 'w') as f:
+        f.write("=== Model Evaluation Results ===\n\n")
+        f.write(f"Timestamp: {timestamp}\n")
+        f.write(f"Accuracy: {accuracy:.4f}\n\n")
+        f.write("Confusion Matrix:\n")
+        f.write(str(conf_matrix))
+        f.write("\n\nClassification Report:\n")
+        f.write(str(class_report))
+        f.write(f"\nROC-AUC Score: {roc_auc:.4f}\n")
+    
+    logger.info(f"Evaluation results saved to {result_file}")
+
+# -----------------------------
 # Evaluate Model Function
 # -----------------------------
 def evaluate_model(model, history, X_test, y_test):
     """
-    Evaluate the trained model on the test set and plot training history.
-
-    Parameters:
-        model (Model): Trained Keras model.
-        history (History): Training history.
-        X_test (ndarray): Testing features.
-        y_test (ndarray): Testing labels.
+    Evaluate the trained model and save results.
     """
-    # Predictions
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    results_dir = 'evaluation_results'
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
+
+    # Generate predictions and metrics
     y_pred_prob = model.predict(X_test).ravel()
     y_pred = (y_pred_prob >= 0.5).astype(int)
 
-    # Metrics
+    # Calculate metrics
     accuracy = accuracy_score(y_test, y_pred)
     conf_matrix = confusion_matrix(y_test, y_pred)
     class_report = classification_report(y_test, y_pred, target_names=['Talking', 'Singing'])
     roc_auc = roc_auc_score(y_test, y_pred_prob)
 
-    logger.info(f"\n--- Model Evaluation ---")
-    logger.info(f"Accuracy: {accuracy:.4f}")
-    logger.info("Confusion Matrix:")
-    logger.info(str(conf_matrix))
-    logger.info("Classification Report:")
-    logger.info("\n" + class_report)
-    logger.info(f"ROC-AUC Score: {roc_auc:.4f}")
+    # Save metrics to file
+    save_evaluation_results(accuracy, conf_matrix, class_report, roc_auc, timestamp)
 
-    # Plotting Training History
+    # Create and save plots
     plt.figure(figsize=(12, 5))
 
     # Accuracy Plot
@@ -405,7 +431,28 @@ def evaluate_model(model, history, X_test, y_test):
     plt.legend()
 
     plt.tight_layout()
-    plt.show()
+    
+    # Save the plot
+    plot_path = os.path.join(results_dir, f'training_history_{timestamp}.png')
+    plt.savefig(plot_path)
+    plt.close()
+    
+    # Save training history to CSV
+    history_df = pd.DataFrame(history.history)
+    history_path = os.path.join(results_dir, f'training_history_{timestamp}.csv')
+    history_df.to_csv(history_path, index=False)
+    
+    logger.info(f"Training plots saved to {plot_path}")
+    logger.info(f"Training history saved to {history_path}")
+
+    # Log results to console
+    logger.info(f"\n--- Model Evaluation ---")
+    logger.info(f"Accuracy: {accuracy:.4f}")
+    logger.info("Confusion Matrix:")
+    logger.info(str(conf_matrix))
+    logger.info("Classification Report:")
+    logger.info("\n" + class_report)
+    logger.info(f"ROC-AUC Score: {roc_auc:.4f}")
 
 # -----------------------------
 # Save New Model Function
@@ -485,15 +532,12 @@ def main():
     X_train, y_train = handle_class_imbalance(X_train, y_train, method='smote')
 
     # Step 8: Define fine-tuning parameters
-    temporal = False  # Set to False as data is not temporal
     trainable_layers = 2  # Number of top pre-trained layers to keep trainable
 
     # Step 9: Create fine-tuned model
     fine_tuned_model = create_fine_tuned_model(
         existing_model=pretrained_model,
         input_dim=X_train.shape[1],
-        temporal=temporal,
-        lstm_units=64,  # Not used since temporal=False
         dropout_rate=0.3,
         trainable_layers=trainable_layers
     )

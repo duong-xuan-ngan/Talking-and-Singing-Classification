@@ -1,0 +1,18 @@
+Model Evaluation Results
+======================
+Accuracy: 0.9925
+ROC-AUC Score: 0.9989
+
+Confusion Matrix:
+[[200   1]
+ [  2 198]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+     Talking       0.99      1.00      0.99       201
+     Singing       0.99      0.99      0.99       200
+
+    accuracy                           0.99       401
+   macro avg       0.99      0.99      0.99       401
+weighted avg       0.99      0.99      0.99       401

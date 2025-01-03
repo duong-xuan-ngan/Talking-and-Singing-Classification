@@ -1,0 +1,20 @@
+=== Model Evaluation Results ===
+
+Timestamp: 20250103-181754
+Accuracy: 0.9195
+
+Confusion Matrix:
+[[48  7]
+ [ 0 32]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+     Talking       1.00      0.87      0.93        55
+     Singing       0.82      1.00      0.90        32
+
+    accuracy                           0.92        87
+   macro avg       0.91      0.94      0.92        87
+weighted avg       0.93      0.92      0.92        87
+
+ROC-AUC Score: 0.9909

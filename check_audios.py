@@ -3,7 +3,7 @@ import pandas as pd
 import tensorflow as tf
 
 # Load the trained model
-model = tf.keras.models.load_model('fine_tuned_models/fine_tuned_model_vlatest.h5')
+model = tf.keras.models.load_model('model_results/best_neural_network_model_20250103_182931.h5')
 
 # Load the input test data
 input_file = 'testing.csv'  # Use the test dataset
